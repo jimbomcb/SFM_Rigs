@@ -1,4 +1,3 @@
-
 SFM_Rigs
 ========
 
@@ -22,9 +21,9 @@ Currently supports:
 
 Aliens:
 
-* Alient Grunt  
-> Known issues
-  * IK rigging on the legs have some issues, their legs have 3 bones whereas our IK rigs only support 2 bones.
+* Alient Grunt
+  * Known Issues:
+    * IK rigging on the legs have some issues, their legs have 3 bones whereas our IK rigs only support 2 bones.
 * Bullsquid
 * Gargantua
 * Houndeye
@@ -32,8 +31,8 @@ Aliens:
 Humans:
 
 * Assassin 
-> Features
-  * Support for cloaking. When the rig is added to the assassin, there will be a new AssassinCloak controller, allowing you to control the levels of the cloaking through the graph editor.  
+  * Features:
+    * Support for cloaking. When the rig is added to the assassin, there will be a new AssassinCloak controller, allowing you to control the levels of the cloaking through the graph editor.  
 
 
 *By*
