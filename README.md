@@ -1,4 +1,3 @@
-
 SFM_Rigs
 ========
 
@@ -22,9 +21,9 @@ Currently supports:
 
 Aliens:
 
-* Alient Grunt  
-> Known Issues
-  * IK rigging on the legs have some issues, their legs have 3 bones whereas our IK rigs only support 2 bones.
+* Alient Grunt
+  * Known Issues:
+    * IK rigging on the legs have some issues, their legs have 3 bones whereas our IK rigs only support 2 bones.
 * Bullsquid
 * Gargantua
 * Houndeye
@@ -32,15 +31,16 @@ Aliens:
 Humans:
 
 * Assassin 
-> Features
-  * Support for cloaking. When the rig is added to the assassin, there will be a new AssassinCloak controller, allowing you to control the levels of the cloaking through the graph editor.  
+  * Features:
+    * Support for cloaking. When the rig is added to the assassin, there will be a new AssassinCloak controller, allowing you to control the levels of the cloaking through the graph editor.  
 
 Robots:
 
-* Loader
-> Known Issues
-  * Piston bones are not able to attach to the IK bones correctly, these will either have to be animated manually or removed from the scene.
-  
+* Loader Robot
+  * Known Issues:
+    * Piston joints are currently broken due to issues with locking to IK constrained bones. Either animate manually or remove from the shot.  
+
+
 *By*
 --
 
