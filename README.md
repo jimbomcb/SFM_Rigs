@@ -3,6 +3,10 @@ SFM_Rigs
 
 Rigging scripts for Source Filmmaker!
 
+*Installation*
+-
+Drop the *.py file into SourceFilmmaker\game\platform\scripts\sfm\animset, the rig scripts are now accessible from the rightclick->rig menu on animation sets.
+
 *rig_headcrabs*
 -
 Rigging for the 3 headcrabs, requires custom model, can be found [here](http://steamcommunity.com/groups/OpenSourceFilmmaker/discussions/2/864945865074664734/)
