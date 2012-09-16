@@ -23,7 +23,7 @@ Currently supports:
 Aliens:
 
 * Alient Grunt  
-> Known issues
+> Known Issues
   * IK rigging on the legs have some issues, their legs have 3 bones whereas our IK rigs only support 2 bones.
 * Bullsquid
 * Gargantua
@@ -35,7 +35,12 @@ Humans:
 > Features
   * Support for cloaking. When the rig is added to the assassin, there will be a new AssassinCloak controller, allowing you to control the levels of the cloaking through the graph editor.  
 
+Robots:
 
+* Loader
+> Known Issues
+  * Piston bones are not able to attach to the IK bones correctly, these will either have to be animated manually or removed from the scene.
+  
 *By*
 --
 

@@ -1,9 +1,12 @@
-## Black Mesa Source Rigging Scripts - v1
-## 15/09/2012
+## Black Mesa Source Rigging Scripts
 ## - jimbomcb@gmail.com
 
 import vs
+import sfm
 import os
+
+from vs import dmeutils
+animUtils = dmeutils.CDmAnimUtils
 
 def AddValidObjectToList( objectList, obj ):
     if ( obj != None ): objectList.append( obj )
@@ -31,6 +34,48 @@ def ComputeVectorBetweenBones( boneA, boneB, scaleFactor ):
     
     return vScaledDir
 		
+def CreateOrientConstraint( target, slave, bCreateControls=True, group=None ) :
+    if ( target == None ):
+        return
+
+    targetDag = sfmUtils.GetDagFromNameOrObject( target )
+    slaveDag = sfmUtils.GetDagFromNameOrObject( slave )
+    
+    sfm.PushSelection()
+    sfmUtils.SelectDagList( [ targetDag, slaveDag ] )
+    
+    orientConstraintTarget = sfm.OrientConstraint( controls=bCreateControls )
+    
+    if ( group != None ):
+        if ( orientConstraintTarget != None ):
+            orientWeightControl = orientConstraintTarget.FindWeightControl()
+            if ( orientWeightControl != None ):
+                group.AddControl( orientWeightControl )
+            
+    sfm.PopSelection()
+    return
+	
+def CreatePointConstraint( target, slave, bCreateControls=True, group=None ) :
+    if ( target == None ):
+        return
+
+    targetDag = sfmUtils.GetDagFromNameOrObject( target )
+    slaveDag = sfmUtils.GetDagFromNameOrObject( slave )
+    
+    sfm.PushSelection()
+    sfmUtils.SelectDagList( [ targetDag, slaveDag ] )
+    
+    pointConstraintTarget = sfm.PointConstraint( controls=bCreateControls )
+    
+    if ( group != None ):
+        if ( pointConstraintTarget != None ):
+            pointWeightControl = pointConstraintTarget.FindWeightControl()
+            if ( pointWeightControl != None ):
+                group.AddControl( pointWeightControl )
+            
+    sfm.PopSelection()
+    return
+	
 def BuildRig():
     
     # Get the currently selected animation set and shot
@@ -56,9 +101,10 @@ def BuildRig():
     isGarg = False
     isAGrunt = False
     isHAssassin = False
+    isLoader = False
 				
     if ( gameModel == None ) :
-		raise "Unable to find gameModel..."
+		raise Exception("Unable to find gameModel...")
 
     if ( gameModel.GetModelName() == "models/xenians/bullsquid.mdl" ) :
 		isBullsquid = True
@@ -77,8 +123,16 @@ def BuildRig():
     if ( gameModel.GetModelName() == "models/humans/hassassin.mdl" ) :
 		isHAssassin = True
 		
-    if ( isBullsquid == False and isHoundeye == False and isGarg == False and isAGrunt == False and isHAssassin == False ) :
-		raise Exception("Sorry! This either isn't a Black Mesa model or there's no rig support for it yet! ")
+    if ( gameModel.GetModelName() == "models/props_vehicles/loader.mdl" ) :
+		isLoader = True
+		
+    if ( isBullsquid == False 
+	and isHoundeye == False 
+	and isGarg == False 
+	and isAGrunt == False 
+	and isHAssassin == False
+	and isLoader == False ) :
+		raise Exception("Sorry! This either isn't a Black Mesa model or there's no rig support for it yet! (" + gameModel.GetModelName() + ")")
 		
     if ( isBullsquid ):
 		boneRoot      	= sfmUtils.FindFirstDag( [ "RootTransform" ], True )
@@ -259,6 +313,58 @@ def BuildRig():
 		boneArmR1		= sfmUtils.FindFirstDag( [ "ValveBiped.Bip01_R_UpperArm" ], True )
 		boneArmR2		= sfmUtils.FindFirstDag( [ "ValveBiped.Bip01_R_Forearm" ], True )
 		boneArmR3		= sfmUtils.FindFirstDag( [ "ValveBiped.Bip01_R_Hand" ], True )
+		
+    if ( isLoader ):
+		boneRoot      	= sfmUtils.FindFirstDag( [ "RootTransform" ], True )
+		boneBase      	= sfmUtils.FindFirstDag( [ "ROOT" ], True )
+		boneLower      	= sfmUtils.FindFirstDag( [ "Lower_Body" ], True )
+		boneUpper      	= sfmUtils.FindFirstDag( [ "UpperBody" ], True )
+		
+		boneLegFL_Swivel 	= sfmUtils.FindFirstDag( [ "LegFL_Swivel" ], True )
+		boneLegFL_01 		= sfmUtils.FindFirstDag( [ "LegFL_01" ], True )
+		boneLegFL_02 		= sfmUtils.FindFirstDag( [ "LegFL_02" ], True )
+		boneLegFL_Piston1	= sfmUtils.FindFirstDag( [ "LegFL_Piston01" ], True )
+		boneLegFL_Piston2	= sfmUtils.FindFirstDag( [ "LegFL_Piston02" ], True )
+		boneLegFL_Extend	= sfmUtils.FindFirstDag( [ "LegFL_Extend" ], True )
+		boneLegFL_Foot		= sfmUtils.FindFirstDag( [ "LegFL_Foot" ], True )
+		
+		boneLegFR_Swivel 	= sfmUtils.FindFirstDag( [ "LegFR_Swivel" ], True )
+		boneLegFR_01 		= sfmUtils.FindFirstDag( [ "LegFR_01" ], True )
+		boneLegFR_02 		= sfmUtils.FindFirstDag( [ "LegFR_02" ], True )
+		boneLegFR_Piston1	= sfmUtils.FindFirstDag( [ "LegFR_Piston01" ], True )
+		boneLegFR_Piston2	= sfmUtils.FindFirstDag( [ "LegFR_Piston02" ], True )
+		boneLegFR_Extend	= sfmUtils.FindFirstDag( [ "LegFR_Extend" ], True )
+		boneLegFR_Foot		= sfmUtils.FindFirstDag( [ "LegFR_Foot" ], True )
+		
+		boneLegBL_Swivel 	= sfmUtils.FindFirstDag( [ "LegBL_Swivel" ], True )
+		boneLegBL_01 		= sfmUtils.FindFirstDag( [ "LegBL_01" ], True )
+		boneLegBL_02 		= sfmUtils.FindFirstDag( [ "LegBL_02" ], True )
+		boneLegBL_Piston1	= sfmUtils.FindFirstDag( [ "LegBL_Piston01" ], True )
+		boneLegBL_Piston2	= sfmUtils.FindFirstDag( [ "LegBL_Piston02" ], True )
+		boneLegBL_Extend	= sfmUtils.FindFirstDag( [ "LegBL_Extend" ], True )
+		boneLegBL_Foot		= sfmUtils.FindFirstDag( [ "LegBL_Foot" ], True )
+		
+		boneLegBR_Swivel 	= sfmUtils.FindFirstDag( [ "LegBR_Swivel" ], True )
+		boneLegBR_01 		= sfmUtils.FindFirstDag( [ "LegBR_01" ], True )
+		boneLegBR_02 		= sfmUtils.FindFirstDag( [ "LegBR_02" ], True )
+		boneLegBR_Piston1	= sfmUtils.FindFirstDag( [ "LegBR_Piston01" ], True )
+		boneLegBR_Piston2	= sfmUtils.FindFirstDag( [ "LegBR_Piston02" ], True )
+		boneLegBR_Extend	= sfmUtils.FindFirstDag( [ "LegBR_Extend" ], True )
+		boneLegBR_Foot		= sfmUtils.FindFirstDag( [ "LegBR_Foot" ], True )
+		
+		boneArmL_1 			= sfmUtils.FindFirstDag( [ "ArmL_01" ], True )
+		boneArmL_2 			= sfmUtils.FindFirstDag( [ "ArmL_02" ], True )
+		boneArmL_3 			= sfmUtils.FindFirstDag( [ "ArmL_03" ], True )
+		boneArmL_4 			= sfmUtils.FindFirstDag( [ "ArmL_04" ], True )
+		boneArmL_5 			= sfmUtils.FindFirstDag( [ "ArmL_05" ], True )
+		boneArmL_6 			= sfmUtils.FindFirstDag( [ "ArmL_06" ], True )
+		
+		boneArmR_1 			= sfmUtils.FindFirstDag( [ "ArmR_01" ], True )
+		boneArmR_2 			= sfmUtils.FindFirstDag( [ "ArmR_02" ], True )
+		boneArmR_3 			= sfmUtils.FindFirstDag( [ "ArmR_03" ], True )
+		boneArmR_4 			= sfmUtils.FindFirstDag( [ "ArmR_04" ], True )
+		boneArmR_5 			= sfmUtils.FindFirstDag( [ "ArmR_05" ], True )
+		boneArmR_6 			= sfmUtils.FindFirstDag( [ "ArmR_06" ], True )
 		
 		
     if ( isBullsquid ):
@@ -523,6 +629,74 @@ def BuildRig():
 							rigArmL1, rigArmL2, rigArmL3, rigElbowHelperL,
 							rigArmR1, rigArmR2, rigArmR3, rigElbowHelperR ] ;	
     
+    if ( isLoader ):
+		rigRoot    		= sfmUtils.CreateConstrainedHandle( "rig_root",     	boneRoot,    	bCreateControls=False )
+		rigBase    		= sfmUtils.CreateConstrainedHandle( "rig_base",    		boneBase,    	bCreateControls=False )
+		rigLower    	= sfmUtils.CreateConstrainedHandle( "rig_lower",    	boneLower,    	bCreateControls=False )
+		rigUpper   		= sfmUtils.CreateConstrainedHandle( "rig_upper",    	boneUpper,    	bCreateControls=False )
+		
+		rigLegFL_Swivel   	= sfmUtils.CreateConstrainedHandle( "rig_legFL_swivel",    	boneLegFL_Swivel,   bCreateControls=False )
+		rigLegFL_01   		= sfmUtils.CreateConstrainedHandle( "rig_legFL_01",    		boneLegFL_01,    	bCreateControls=False )
+		rigLegFL_02   		= sfmUtils.CreateConstrainedHandle( "rig_legFL_02",    		boneLegFL_02,    	bCreateControls=False )
+		rigLegFL_Piston1   	= sfmUtils.CreateConstrainedHandle( "rig_legFL_Piston1",    boneLegFL_Piston1,    	bCreateControls=False )
+		rigLegFL_Piston2   	= sfmUtils.CreateConstrainedHandle( "rig_legFL_Piston2",    boneLegFL_Piston2,    	bCreateControls=False )
+		rigLegFL_Extend   	= sfmUtils.CreateConstrainedHandle( "rig_legFL_Extend",    	boneLegFL_Extend,    	bCreateControls=False )
+		rigLegFL_Foot   	= sfmUtils.CreateConstrainedHandle( "rig_legFL_Foot",    	boneLegFL_Foot,    	bCreateControls=False )
+		
+		rigLegFR_Swivel   	= sfmUtils.CreateConstrainedHandle( "rig_legFR_swivel",    	boneLegFR_Swivel,   bCreateControls=False )
+		rigLegFR_01   		= sfmUtils.CreateConstrainedHandle( "rig_legFR_01",    		boneLegFR_01,    	bCreateControls=False )
+		rigLegFR_02   		= sfmUtils.CreateConstrainedHandle( "rig_legFR_02",    		boneLegFR_02,    	bCreateControls=False )
+		rigLegFR_Piston1   	= sfmUtils.CreateConstrainedHandle( "rig_legFR_Piston1",    boneLegFR_Piston1,    	bCreateControls=False )
+		rigLegFR_Piston2   	= sfmUtils.CreateConstrainedHandle( "rig_legFR_Piston2",    boneLegFR_Piston2,    	bCreateControls=False )
+		rigLegFR_Extend   	= sfmUtils.CreateConstrainedHandle( "rig_legFR_Extend",    	boneLegFR_Extend,    	bCreateControls=False )
+		rigLegFR_Foot   	= sfmUtils.CreateConstrainedHandle( "rig_legFR_Foot",    	boneLegFR_Foot,    	bCreateControls=False )
+		
+		rigLegBL_Swivel   	= sfmUtils.CreateConstrainedHandle( "rig_legBL_swivel",    	boneLegBL_Swivel,   bCreateControls=False )
+		rigLegBL_01   		= sfmUtils.CreateConstrainedHandle( "rig_legBL_01",    		boneLegBL_01,    	bCreateControls=False )
+		rigLegBL_02   		= sfmUtils.CreateConstrainedHandle( "rig_legBL_02",    		boneLegBL_02,    	bCreateControls=False )
+		rigLegBL_Piston1   	= sfmUtils.CreateConstrainedHandle( "rig_legBL_Piston1",    boneLegBL_Piston1,    	bCreateControls=False )
+		rigLegBL_Piston2   	= sfmUtils.CreateConstrainedHandle( "rig_legBL_Piston2",    boneLegBL_Piston2,    	bCreateControls=False )
+		rigLegBL_Extend   	= sfmUtils.CreateConstrainedHandle( "rig_legBL_Extend",    	boneLegBL_Extend,    	bCreateControls=False )
+		rigLegBL_Foot   	= sfmUtils.CreateConstrainedHandle( "rig_legBL_Foot",    	boneLegBL_Foot,    	bCreateControls=False )
+		
+		rigLegBR_Swivel   	= sfmUtils.CreateConstrainedHandle( "rig_legBR_swivel",    	boneLegBR_Swivel,   bCreateControls=False )
+		rigLegBR_01   		= sfmUtils.CreateConstrainedHandle( "rig_legBR_01",    		boneLegBR_01,    	bCreateControls=False )
+		rigLegBR_02   		= sfmUtils.CreateConstrainedHandle( "rig_legBR_02",    		boneLegBR_02,    	bCreateControls=False )
+		rigLegBR_Piston1   	= sfmUtils.CreateConstrainedHandle( "rig_legBR_Piston1",    boneLegBR_Piston1,    	bCreateControls=False )
+		rigLegBR_Piston2   	= sfmUtils.CreateConstrainedHandle( "rig_legBR_Piston2",    boneLegBR_Piston2,    	bCreateControls=False )
+		rigLegBR_Extend   	= sfmUtils.CreateConstrainedHandle( "rig_legBR_Extend",    	boneLegBR_Extend,    	bCreateControls=False )
+		rigLegBR_Foot   	= sfmUtils.CreateConstrainedHandle( "rig_legBR_Foot",    	boneLegBR_Foot,    	bCreateControls=False )
+		
+		rigArmL_1   		= sfmUtils.CreateConstrainedHandle( "rig_armL_1",    		boneArmL_1,   		bCreateControls=False )
+		rigArmL_2   		= sfmUtils.CreateConstrainedHandle( "rig_armL_2",    		boneArmL_2,   		bCreateControls=False )
+		rigArmL_3   		= sfmUtils.CreateConstrainedHandle( "rig_armL_3",    		boneArmL_3,   		bCreateControls=False )
+		rigArmL_4   		= sfmUtils.CreateConstrainedHandle( "rig_armL_4",    		boneArmL_4,   		bCreateControls=False )
+		rigArmL_5   		= sfmUtils.CreateConstrainedHandle( "rig_armL_5",    		boneArmL_5,   		bCreateControls=False )
+		rigArmL_6   		= sfmUtils.CreateConstrainedHandle( "rig_armL_6",    		boneArmL_6,   		bCreateControls=False )
+		
+		rigArmR_1   		= sfmUtils.CreateConstrainedHandle( "rig_ArmR_1",    		boneArmR_1,   		bCreateControls=False )
+		rigArmR_2   		= sfmUtils.CreateConstrainedHandle( "rig_ArmR_2",    		boneArmR_2,   		bCreateControls=False )
+		rigArmR_3   		= sfmUtils.CreateConstrainedHandle( "rig_ArmR_3",    		boneArmR_3,   		bCreateControls=False )
+		rigArmR_4   		= sfmUtils.CreateConstrainedHandle( "rig_ArmR_4",    		boneArmR_4,   		bCreateControls=False )
+		rigArmR_5   		= sfmUtils.CreateConstrainedHandle( "rig_ArmR_5",    		boneArmR_5,   		bCreateControls=False )
+		rigArmR_6   		= sfmUtils.CreateConstrainedHandle( "rig_ArmR_6",    		boneArmR_6,   		bCreateControls=False )
+		
+		vKneeOffset = vs.Vector( 0, 0, 35 )
+		
+		rigKneeHelperFL  	= sfmUtils.CreateOffsetHandle( "rig_knee_helper_fl", 		rigLegFL_02, 		vKneeOffset,	bCreateControls=False ) 
+		rigKneeHelperFR  	= sfmUtils.CreateOffsetHandle( "rig_knee_helper_fr", 		rigLegFR_02, 		vKneeOffset,	bCreateControls=False ) 
+		rigKneeHelperBL  	= sfmUtils.CreateOffsetHandle( "rig_knee_helper_bl", 		rigLegBL_02, 		vKneeOffset,	bCreateControls=False ) 
+		rigKneeHelperBR  	= sfmUtils.CreateOffsetHandle( "rig_knee_helper_br", 		rigLegBR_02, 		vKneeOffset,	bCreateControls=False ) 
+		
+		allRigHandles = [ 	rigRoot, rigBase, rigLower, rigUpper,
+							rigLegFL_Swivel, rigLegFL_01, rigLegFL_02, rigLegFL_Piston1, rigLegFL_Piston2, rigLegFL_Extend, rigLegFL_Foot, rigKneeHelperFL,	
+							rigLegFR_Swivel, rigLegFR_01, rigLegFR_02, rigLegFR_Piston1, rigLegFR_Piston2, rigLegFR_Extend, rigLegFR_Foot, rigKneeHelperFR,	
+							rigLegBL_Swivel, rigLegBL_01, rigLegBL_02, rigLegBL_Piston1, rigLegBL_Piston2, rigLegBL_Extend, rigLegBL_Foot, rigKneeHelperBL,	
+							rigLegBR_Swivel, rigLegBR_01, rigLegBR_02, rigLegBR_Piston1, rigLegBR_Piston2, rigLegBR_Extend, rigLegBR_Foot, rigKneeHelperBR,
+							rigArmL_1, rigArmL_2, rigArmL_3, rigArmL_4, rigArmL_5, rigArmL_6,
+							rigArmR_1, rigArmR_2, rigArmR_3, rigArmR_4, rigArmR_5, rigArmR_6
+							] ;	
+    
     sfm.ClearSelection()
     sfmUtils.SelectDagList( allRigHandles )
     sfm.GenerateSamples()
@@ -723,6 +897,62 @@ def BuildRig():
 		sfmUtils.ParentMaintainWorld( rigArmR3,        	rigRoot )
 		sfmUtils.ParentMaintainWorld( rigElbowHelperR,  rigArmR2 )	
 		
+    if ( isLoader ):
+		sfmUtils.ParentMaintainWorld( rigBase,        	rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLower,        	rigBase )
+		sfmUtils.ParentMaintainWorld( rigUpper,        	rigLower )
+				
+		sfmUtils.ParentMaintainWorld( rigLegFL_Swivel, 	rigBase )
+		sfmUtils.ParentMaintainWorld( rigLegFR_Swivel, 	rigBase )
+		sfmUtils.ParentMaintainWorld( rigLegBL_Swivel, 	rigBase )
+		sfmUtils.ParentMaintainWorld( rigLegBR_Swivel, 	rigBase )
+		
+		sfmUtils.ParentMaintainWorld( rigLegFL_01, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegFL_02, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegFL_Piston1, rigLegFL_01 )
+		sfmUtils.ParentMaintainWorld( rigLegFL_Piston2, rigLegFL_02 )
+		sfmUtils.ParentMaintainWorld( rigLegFL_Extend, 	rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegFL_Foot, 	rigLegFL_Extend )
+		sfmUtils.ParentMaintainWorld( rigKneeHelperFL, 	rigLegFL_Extend )
+		
+		sfmUtils.ParentMaintainWorld( rigLegFR_01, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegFR_02, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegFR_Piston1, rigLegFR_01 )
+		sfmUtils.ParentMaintainWorld( rigLegFR_Piston2, rigLegFR_02 )
+		sfmUtils.ParentMaintainWorld( rigLegFR_Extend, 	rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegFR_Foot, 	rigLegFR_Extend )
+		sfmUtils.ParentMaintainWorld( rigKneeHelperFR, 	rigLegFR_Extend )
+		
+		sfmUtils.ParentMaintainWorld( rigLegBL_01, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegBL_02, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegBL_Piston1, rigLegBL_01 )
+		sfmUtils.ParentMaintainWorld( rigLegBL_Piston2, rigLegBL_02 )
+		sfmUtils.ParentMaintainWorld( rigLegBL_Extend, 	rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegBL_Foot, 	rigLegBL_Extend )
+		sfmUtils.ParentMaintainWorld( rigKneeHelperBL, 	rigLegBL_Extend )
+		
+		sfmUtils.ParentMaintainWorld( rigLegBR_01, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegBR_02, 		rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegBR_Piston1, rigLegBR_01 )
+		sfmUtils.ParentMaintainWorld( rigLegBR_Piston2, rigLegBR_02 )
+		sfmUtils.ParentMaintainWorld( rigLegBR_Extend, 	rigRoot )
+		sfmUtils.ParentMaintainWorld( rigLegBR_Foot, 	rigLegBR_Extend )
+		sfmUtils.ParentMaintainWorld( rigKneeHelperBR, 	rigLegBR_Extend )
+		
+		sfmUtils.ParentMaintainWorld( rigArmL_1, 		rigUpper )
+		sfmUtils.ParentMaintainWorld( rigArmL_2, 		rigArmL_1 )
+		sfmUtils.ParentMaintainWorld( rigArmL_3, 		rigArmL_1 )
+		sfmUtils.ParentMaintainWorld( rigArmL_4, 		rigArmL_3 )
+		sfmUtils.ParentMaintainWorld( rigArmL_5, 		rigArmL_3 )
+		sfmUtils.ParentMaintainWorld( rigArmL_6, 		rigArmL_5 )
+		
+		sfmUtils.ParentMaintainWorld( rigArmR_1, 		rigUpper )
+		sfmUtils.ParentMaintainWorld( rigArmR_2, 		rigArmR_1 )
+		sfmUtils.ParentMaintainWorld( rigArmR_3, 		rigArmR_1 )
+		sfmUtils.ParentMaintainWorld( rigArmR_4, 		rigArmR_3 )
+		sfmUtils.ParentMaintainWorld( rigArmR_5, 		rigArmR_3 )
+		sfmUtils.ParentMaintainWorld( rigArmR_6, 		rigArmR_5 )
+		
 				
     sfm.SetDefault()
         
@@ -860,6 +1090,49 @@ def BuildRig():
 		sfmUtils.BuildArmLeg( rigKneeHelperR,  rigLegR3, boneLegR1, boneLegR3, True )
 		sfmUtils.BuildArmLeg( rigElbowHelperL,  rigArmL3, boneArmL1, boneArmL3, True )
 		sfmUtils.BuildArmLeg( rigElbowHelperR,  rigArmR3, boneArmR1, boneArmR3, True )
+    
+    if ( isLoader ):
+		sfmUtils.CreatePointOrientConstraint( rigRoot,		boneRoot )
+		sfmUtils.CreatePointOrientConstraint( rigBase,		boneBase )
+		sfmUtils.CreatePointOrientConstraint( rigLower,		boneLower )
+		sfmUtils.CreatePointOrientConstraint( rigUpper,		boneUpper )
+		
+		CreateOrientConstraint( rigLegFL_Piston1,	boneLegFL_Piston1 )
+		CreateOrientConstraint( rigLegFL_Piston2,	boneLegFL_Piston2 )
+		CreateOrientConstraint( rigLegFR_Piston1,	boneLegFR_Piston1 )
+		CreateOrientConstraint( rigLegFR_Piston2,	boneLegFR_Piston2 )
+		CreateOrientConstraint( rigLegBL_Piston1,	boneLegBL_Piston1 )
+		CreateOrientConstraint( rigLegBL_Piston2,	boneLegBL_Piston2 )
+		CreateOrientConstraint( rigLegBR_Piston1,	boneLegBR_Piston1 )
+		CreateOrientConstraint( rigLegBR_Piston2,	boneLegBR_Piston2 )
+		
+		sfmUtils.CreatePointOrientConstraint( rigLegFL_Swivel,	boneLegFL_Swivel )
+		CreateOrientConstraint( rigLegFL_Foot,	boneLegFL_Foot )
+		sfmUtils.CreatePointOrientConstraint( rigLegFR_Swivel,	boneLegFR_Swivel )
+		CreateOrientConstraint( rigLegFR_Foot,	boneLegFR_Foot )		
+		sfmUtils.CreatePointOrientConstraint( rigLegBL_Swivel,	boneLegBL_Swivel )
+		CreateOrientConstraint( rigLegBL_Foot,	boneLegBL_Foot )
+		sfmUtils.CreatePointOrientConstraint( rigLegBR_Swivel,	boneLegBR_Swivel )
+		CreateOrientConstraint( rigLegBR_Foot,	boneLegBR_Foot )
+		
+		sfmUtils.BuildArmLeg( rigKneeHelperFL,  rigLegFL_Extend, boneLegFL_01, boneLegFL_Extend, False )
+		sfmUtils.BuildArmLeg( rigKneeHelperFR,  rigLegFR_Extend, boneLegFR_01, boneLegFR_Extend, False )
+		sfmUtils.BuildArmLeg( rigKneeHelperBL,  rigLegBL_Extend, boneLegBL_01, boneLegBL_Extend, False )
+		sfmUtils.BuildArmLeg( rigKneeHelperBR,  rigLegBR_Extend, boneLegBR_01, boneLegBR_Extend, False )
+				
+		sfmUtils.CreatePointOrientConstraint( rigArmL_1,		boneArmL_1 )
+		sfmUtils.CreatePointOrientConstraint( rigArmL_2,		boneArmL_2 )
+		sfmUtils.CreatePointOrientConstraint( rigArmL_3,		boneArmL_3 )
+		sfmUtils.CreatePointOrientConstraint( rigArmL_4,		boneArmL_4 )
+		sfmUtils.CreatePointOrientConstraint( rigArmL_5,		boneArmL_5 )
+		sfmUtils.CreatePointOrientConstraint( rigArmL_6,		boneArmL_6 )
+		
+		sfmUtils.CreatePointOrientConstraint( rigArmR_1,		boneArmR_1 )
+		sfmUtils.CreatePointOrientConstraint( rigArmR_2,		boneArmR_2 )
+		sfmUtils.CreatePointOrientConstraint( rigArmR_3,		boneArmR_3 )
+		sfmUtils.CreatePointOrientConstraint( rigArmR_4,		boneArmR_4 )
+		sfmUtils.CreatePointOrientConstraint( rigArmR_5,		boneArmR_5 )
+		sfmUtils.CreatePointOrientConstraint( rigArmR_6,		boneArmR_6 )
     
 	
 	
@@ -1014,6 +1287,53 @@ def BuildRig():
 		sfmUtils.AddDagControlsToGroup( LeftArmGroup, rigArmL1, rigArmL2, rigArmL3, rigElbowHelperL )
 		sfmUtils.AddDagControlsToGroup( RightArmGroup, rigArmR1, rigArmR2, rigArmR3, rigElbowHelperR )
 
+    if ( isLoader ):	
+		rigHelpersGroup = rootGroup.CreateControlGroup( "RigHidden" )
+		rigHelpersGroup.SetVisible( False )
+		rigHelpersGroup.SetSnappable( False )
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigLegFL_01, rigLegFL_02 )
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigLegFR_01, rigLegFR_02 )
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigLegBL_01, rigLegBL_02 )
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigLegBR_01, rigLegBR_02 )
+		
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigKneeHelperFL )
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigKneeHelperFR )
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigKneeHelperBL )
+		sfmUtils.AddDagControlsToGroup( rigHelpersGroup, rigKneeHelperBR )
+	
+		rigBodyGroup = rootGroup.CreateControlGroup( "RigBody" )
+		sfmUtils.AddDagControlsToGroup( rigBodyGroup, rigRoot, rigBase )   
+		sfmUtils.AddDagControlsToGroup( rigBodyGroup, rigLower, rigUpper )   
+				
+		rigLegsGroup = rootGroup.CreateControlGroup( "RigLegs" )
+		FrontLeftLegGroup = rootGroup.CreateControlGroup( "Front Left Leg" )		  		
+		FrontRightLegGroup = rootGroup.CreateControlGroup( "Front Right Leg" )		
+		BackLeftLegGroup = rootGroup.CreateControlGroup( "Back Left Leg" )		  		
+		BackRightLegGroup = rootGroup.CreateControlGroup( "Back Right Leg" )		  		
+		rigLegsGroup.AddChild( FrontLeftLegGroup )
+		rigLegsGroup.AddChild( FrontRightLegGroup )
+		rigLegsGroup.AddChild( BackLeftLegGroup )
+		rigLegsGroup.AddChild( BackRightLegGroup )
+		
+		sfmUtils.AddDagControlsToGroup( FrontLeftLegGroup, 
+			rigLegFL_Swivel, rigLegFL_Extend, rigLegFL_Foot, rigLegFL_Piston1, rigLegFL_Piston2 )
+		sfmUtils.AddDagControlsToGroup( FrontRightLegGroup, 
+			rigLegFR_Swivel, rigLegFR_Extend, rigLegFR_Foot, rigLegFR_Piston1, rigLegFR_Piston2 )
+		sfmUtils.AddDagControlsToGroup( BackLeftLegGroup, 
+			rigLegBL_Swivel, rigLegBL_Extend, rigLegBL_Foot, rigLegBL_Piston1, rigLegBL_Piston2 )
+		sfmUtils.AddDagControlsToGroup( BackRightLegGroup, 
+			rigLegBR_Swivel, rigLegBR_Extend, rigLegBR_Foot, rigLegBR_Piston1, rigLegBR_Piston2 )
+
+		rigArmsGroup = rootGroup.CreateControlGroup( "RigArms" )
+		LeftArmGroup = rootGroup.CreateControlGroup( "Left Arm" )		  		
+		RightArmGroup = rootGroup.CreateControlGroup( "Right Arm" )		  		
+		rigArmsGroup.AddChild( LeftArmGroup )
+		rigArmsGroup.AddChild( RightArmGroup )
+		
+		sfmUtils.AddDagControlsToGroup( LeftArmGroup, rigArmL_1, rigArmL_2, rigArmL_3, rigArmL_4, rigArmL_5, rigArmL_6 )
+		sfmUtils.AddDagControlsToGroup( RightArmGroup, rigArmR_1, rigArmR_2, rigArmR_3, rigArmR_4, rigArmR_5, rigArmR_6 )
+		
+		
     # Set the control group visiblity, this is done through the rig so it can track which
     # groups it hid, so they can be set back to being visible when the rig is detached.
     HideControlGroups( rig, rootGroup, "Body", "Arms", "Legs", "Unknown", "Other", "Root" )      
@@ -1048,6 +1368,12 @@ def BuildRig():
     if ( isHAssassin ):
 		#Re-order the groups
 		rootGroup.MoveChildToBottom( rigHeadGroup )
+		rootGroup.MoveChildToBottom( rigBodyGroup )
+		rootGroup.MoveChildToBottom( rigArmsGroup )
+		rootGroup.MoveChildToBottom( rigLegsGroup )    
+		
+    if ( isLoader ):
+		#Re-order the groups
 		rootGroup.MoveChildToBottom( rigBodyGroup )
 		rootGroup.MoveChildToBottom( rigArmsGroup )
 		rootGroup.MoveChildToBottom( rigLegsGroup )    
@@ -1109,6 +1435,17 @@ def BuildRig():
 		RightArmGroup.SetGroupColor( RightColor, False )
 		LeftArmGroup.SetGroupColor( LeftColor, False )
 		
+    if ( isLoader ):
+		rigBodyGroup.SetGroupColor( topLevelColor, False )
+		rigLegsGroup.SetGroupColor( topLevelColor, False )
+		rigArmsGroup.SetGroupColor( topLevelColor, False )
+		FrontLeftLegGroup.SetGroupColor( LeftColor, False )
+		FrontRightLegGroup.SetGroupColor( RightColor, False )
+		BackLeftLegGroup.SetGroupColor( LeftColor, False )
+		BackRightLegGroup.SetGroupColor( RightColor, False )
+		LeftArmGroup.SetGroupColor( LeftColor, False )
+		RightArmGroup.SetGroupColor( RightColor, False )
+		
     # End the rig definition
     sfm.EndRig()
 		
@@ -1141,6 +1478,9 @@ def BuildRig():
 		control = sfmUtils.CreateControlAndChannel('AssassinCloak2', vs.AT_FLOAT, 0.0, animSet, shot)
 		control.channel.SetOutput(cloak_2, '$cloakfactor')	
 		cloakMasterConnection.AddOutput(cloak_2, '$cloakfactor')
+			
+    #if ( isLoader  ):		
+		#sfm.AimConstraint( "rigLegFL_Piston1", "rigLegFL_Piston2", wu=[ 0, -1, 0 ], wuSpace="refObject", refObject="rig_pelvis", mo=True )
 		
 	
     return
