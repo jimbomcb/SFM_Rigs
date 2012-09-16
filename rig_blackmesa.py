@@ -124,6 +124,9 @@ def BuildRig():
 		isHAssassin = True
 		
     if ( gameModel.GetModelName() == "models/props_vehicles/loader.mdl" ) :
+		raise Exception("Sorry, this rigging script isn't usable with the stock Loader model, it is only usable with the re-rigged loader model available from http://dl.jimbomcb.net/sfm/sfm_loader/sfm_loader.zip (Copy-Paste from the console!).")
+		
+    if ( gameModel.GetModelName() == "models/sfm/jimbomcb/sfm_loader.mdl" ) :
 		isLoader = True
 		
     if ( isBullsquid == False 

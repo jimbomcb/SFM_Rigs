@@ -36,7 +36,7 @@ Humans:
 
 Robots:
 
-* Loader Robot
+* Loader Robot - REQUIRES: https://dl.jimbomcb.net/sfm/sfm_loader/sfm_loader.zip
   * Known Issues:
     * Piston joints are currently broken due to issues with locking to IK constrained bones. Either animate manually or remove from the shot.  
 
