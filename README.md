@@ -44,6 +44,10 @@ Robots:
   * Known Issues:
     * Piston joints are currently broken due to issues with locking to IK constrained bones. Either animate manually or remove from the shot.  
 
+*rig_br_mech*
+-
+Rigging for the Blacklight Retribution mechs in http://www.garrysmod.org/downloads/?a=view&id=132382
+
 
 *By*
 --
