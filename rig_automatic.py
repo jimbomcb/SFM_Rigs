@@ -42,8 +42,9 @@ import urllib2
 from vs import dmeutils
 animUtils = dmeutils.CDmAnimUtils
     
+filesystem_path = "platform/scripts/sfm/animset/json_rigger/rig_feed.json" ## If the filesystem path exists, we use it, otherwise grab the URL.
 json_url = "https://dl.jimbomcb.net.s3.amazonaws.com/rigger/rig_feed.json"
-isLocal = False
+isLocal = ( os.path.isfile(filesystem_path) )
 
 def DebugMsg( msg ):
     if ( isLocal == True ):
@@ -83,6 +84,14 @@ def SetupCategory( list, rootGroup, colours, level = 1, parent = None ):
                 
     return list
 
+def IsInIKJoint( list, name ):
+
+    for i in list:   
+        if ( i["start"] == name or i["middle"] == name or i["end"] == name or i["knee"] == name ):
+            return True      
+        
+    return False
+    
 def AddValidObjectToList( objectList, obj ):
     if ( obj != None ): objectList.append( obj )
     
@@ -162,7 +171,8 @@ def BuildRig():
             
         json_rig = json.load(resp)
     else:
-        json_data=open('platform/scripts/sfm/animset/jimbomcb/rig_feed.json')
+        print "Reading JSON Rigging script from "+filesystem_path
+        json_data=open('platform/scripts/sfm/animset/json_rigger/rig_feed.json')
         json_rig = json.load(json_data)
         json_data.close()
         
@@ -227,7 +237,23 @@ def BuildRig():
         DebugMsg( "- Created handle: "+i+" for "+ourModel["rig"][i]["bone"] )
         ourModel["rig"][i]["_rig"] = sfmUtils.CreateConstrainedHandle( i, ourModel["rig"][i]["_dag"], bCreateControls=False )
         allRigHandles += [ ourModel["rig"][i]["_rig"] ]
-    
+        
+    # Generate knee helper handles - TODO: offsets defined in json
+    DebugMsg( "Generating IK PVTarget..." )
+    for i in ourModel["ikjoint"]:   
+        DebugMsg( "- Created IK PVtarget for "+i["knee"] )
+        ikOffset = vs.Vector(0,0,0)
+        
+        if "offset" in i: # Check for offset, otherwise we stick to 0
+            if "start" in i["offset"]: # It's not a vector, calculate vector to another bone and scale by dist.
+                DebugMsg("-- Setting joint offset based on ComputeVectorBetweenBones( "+i["offset"]["start"]+","+i["offset"]["end"]+","+str(i["offset"]["dist"])+")")
+                dagStart = ourModel["rig"][i["offset"]["start"]]["_dag"]
+                dagEnd = ourModel["rig"][i["offset"]["end"]]["_dag"]
+                ikOffset = ComputeVectorBetweenBones( dagStart, dagEnd, i["offset"]["dist"] )
+        
+        i["_knee"] = sfmUtils.CreateOffsetHandle( "rig_knee_"+i["knee"], ourModel["rig"][i["knee"]]["_rig"], ikOffset, bCreateControls=False ) 
+        allRigHandles += [ i["_knee"] ]
+                
     sfm.ClearSelection()
     sfmUtils.SelectDagList( allRigHandles )
     sfm.GenerateSamples()
@@ -237,13 +263,18 @@ def BuildRig():
     DebugMsg( "Setting up parents..." )
     for i in ourModel["rig"]:
         thisBone = ourModel["rig"][i]
-        if ( thisBone["parent"] == "root" ):
+        if ( thisBone["parent"] == "root" or IsInIKJoint( ourModel["ikjoint"], i ) ):
             DebugMsg( "- Parenting "+i+" to root!" )
             sfmUtils.ParentMaintainWorld( thisBone["_rig"], rigRoot )
         elif ( thisBone["parent"] != False ):
             parentBone = ourModel["rig"][thisBone["parent"]]
             DebugMsg( "- Parenting "+i+" to "+thisBone["parent"]+"!" )
             sfmUtils.ParentMaintainWorld( thisBone["_rig"], parentBone["_rig"] )
+            
+    # Knee parents
+    for i in ourModel["ikjoint"]:   
+        DebugMsg( "- Parenting "+i["knee"] )
+        sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig"][i["end"]]["_rig"] )
         
     sfm.SetDefault()
     
@@ -253,6 +284,9 @@ def BuildRig():
         thisName = i
         thisRig = ourModel["rig"][i]["_rig"]
         thisDag = ourModel["rig"][i]["_dag"]
+        
+        if ( IsInIKJoint( ourModel["ikjoint"], i ) ):
+            continue
         
         if "constraint_type" in ourModel["rig"][i]:
             if ( ourModel["rig"][i]["constraint_type"] == 1 ):
@@ -267,6 +301,13 @@ def BuildRig():
         DebugMsg( "- Constraining "+thisName+" with CreatePointOrientConstraint." )
         sfmUtils.CreatePointOrientConstraint( thisRig, thisDag )
         
+    for i in ourModel["ikjoint"]:   
+        DebugMsg( "- Creating an IK joint, "+i["start"]+" - "+i["middle"]+" - "+i["end"]+" (Knee: "+i["knee"]+")" )
+        ikStart = ourModel["rig"][i["start"]]
+        ikMiddle = ourModel["rig"][i["middle"]]
+        ikEnd = ourModel["rig"][i["end"]]
+        sfmUtils.BuildArmLeg( i["_knee"], ikEnd["_rig"], ikStart["_dag"], ikEnd["_dag"], i["constrainfoot"] )
+        
     # ARMS AND LEGS - TODO
     
     # Set up categories
@@ -280,9 +321,22 @@ def BuildRig():
         thisCategory = FindCategory( ourModel["categories"], thisRig["category"] )
         DebugMsg( "- Adding "+i+" to "+thisRig["category"] )
         sfmUtils.AddDagControlsToGroup( thisCategory, thisRig["_rig"] )	
+        
+    for i in ourModel["ikjoint"]:
+        thisRig = ourModel["rig"][i["knee"]]
+        thisCategory = FindCategory( ourModel["categories"], thisRig["category"] )
+        DebugMsg( "- Adding "+i["knee"]+" to "+thisRig["category"] )
+        sfmUtils.AddDagControlsToGroup( thisCategory, i["_knee"] )	
     
     sfm.EndRig()
     print "Done."
+    
+    if ( json_rig["settings"]["outofdate"] ):
+        print "!!!!!!!!!!!!!!!!!!!!!!!!"
+        print "!!!!!!!!!!!!!!!!!!!!!!!!"
+        print "NOTICE: Your rigging script is out of date, please download an updated version from https://raw.github.com/jimbomcb/SFM_Rigs/master/rig_automatic.py (copy from the console)"
+        print "!!!!!!!!!!!!!!!!!!!!!!!!"
+        print "!!!!!!!!!!!!!!!!!!!!!!!!"
 			
     return
     
