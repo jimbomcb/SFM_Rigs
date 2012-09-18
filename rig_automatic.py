@@ -60,6 +60,16 @@ def FindCategory( list, name ):
                 return foundChild    
     return None
     
+def FindCategoryParent( list, name, default ):
+    for i in list:    
+        if ( name == i ):
+            return default
+        if "children" in list[i]:
+            foundChild = FindCategoryParent( list[i]["children"], name, default )
+            if ( foundChild != False ):
+                return list[i]["_category"]    
+    return False
+    
 def SetupCategory( list, rootGroup, colours, level = 1, parent = None ):
     for i in list:
     
@@ -224,27 +234,27 @@ def BuildRig():
     # PS: i'm bad at python - this is so we can do ourModel["rig"][rigname] instead of having to find the right 
     # element in the list. We use the list later on because it maintains the correct order which is needed
     # for the category setup! Please show me a better way of doing this.
-    ourModel["rig"] = {} 
+    ourModel["rig_dict"] = {} 
     for i in ourModel["rigs"]:
-        ourModel["rig"][i["name"]] = i
+        ourModel["rig_dict"][i["name"]] = i
         	
     # Grab our Dags
     DebugMsg( "Finding dags..." )
     boneRoot = sfmUtils.FindFirstDag( [ "RootTransform" ], True )
-    for i in ourModel["rig"]:
+    for i in ourModel["rig_dict"]:
         if ( i == "rig_root" ):
             raise Exception("UH OH! Someone is trying to use \"rig_root\", this is already automatically generated on rootTransform")
-        DebugMsg( "- Finding "+ourModel["rig"][i]["bone"] )
-        ourModel["rig"][i]["_dag"] = sfmUtils.FindFirstDag( [ ourModel["rig"][i]["bone"] ], True )
+        DebugMsg( "- Finding "+ourModel["rig_dict"][i]["bone"] )
+        ourModel["rig_dict"][i]["_dag"] = sfmUtils.FindFirstDag( [ ourModel["rig_dict"][i]["bone"] ], True )
     
     # Generate handles
     DebugMsg( "Generating handles..." )
     rigRoot = sfmUtils.CreateConstrainedHandle( "rig_root",  boneRoot,  bCreateControls=False )
     allRigHandles = [ rigRoot ];
-    for i in ourModel["rig"]:   
-        DebugMsg( "- Created handle: "+i+" for "+ourModel["rig"][i]["bone"] )
-        ourModel["rig"][i]["_rig"] = sfmUtils.CreateConstrainedHandle( i, ourModel["rig"][i]["_dag"], bCreateControls=False )
-        allRigHandles += [ ourModel["rig"][i]["_rig"] ]
+    for i in ourModel["rig_dict"]:   
+        DebugMsg( "- Created handle: "+i+" for "+ourModel["rig_dict"][i]["bone"] )
+        ourModel["rig_dict"][i]["_rig"] = sfmUtils.CreateConstrainedHandle( i, ourModel["rig_dict"][i]["_dag"], bCreateControls=False )
+        allRigHandles += [ ourModel["rig_dict"][i]["_rig"] ]
         
     # Generate knee helper handles - TODO: offsets defined in json
     DebugMsg( "Generating IK PVTarget..." )
@@ -255,11 +265,11 @@ def BuildRig():
         if "offset" in i: # Check for offset, otherwise we stick to 0
             if "start" in i["offset"]: # It's not a vector, calculate vector to another bone and scale by dist.
                 DebugMsg("-- Setting joint offset based on ComputeVectorBetweenBones( "+i["offset"]["start"]+","+i["offset"]["end"]+","+str(i["offset"]["dist"])+")")
-                dagStart = ourModel["rig"][i["offset"]["start"]]["_dag"]
-                dagEnd = ourModel["rig"][i["offset"]["end"]]["_dag"]
+                dagStart = ourModel["rig_dict"][i["offset"]["start"]]["_dag"]
+                dagEnd = ourModel["rig_dict"][i["offset"]["end"]]["_dag"]
                 ikOffset = ComputeVectorBetweenBones( dagStart, dagEnd, i["offset"]["dist"] )
         
-        i["_knee"] = sfmUtils.CreateOffsetHandle( "rig_knee_"+i["knee"], ourModel["rig"][i["knee"]]["_rig"], ikOffset, bCreateControls=False ) 
+        i["_knee"] = sfmUtils.CreateOffsetHandle( "rig_knee_"+i["knee"], ourModel["rig_dict"][i["knee"]]["_rig"], ikOffset, bCreateControls=False ) 
         allRigHandles += [ i["_knee"] ]
                 
     sfm.ClearSelection()
@@ -269,39 +279,39 @@ def BuildRig():
      
     # Setting up parents
     DebugMsg( "Setting up parents..." )
-    for i in ourModel["rig"]:
-        thisBone = ourModel["rig"][i]
+    for i in ourModel["rig_dict"]:
+        thisBone = ourModel["rig_dict"][i]
         if ( thisBone["parent"] == "root" or IsInIKJoint( ourModel["ikjoint"], i ) ):
             DebugMsg( "- Parenting "+i+" to root!" )
             sfmUtils.ParentMaintainWorld( thisBone["_rig"], rigRoot )
         elif ( thisBone["parent"] != False ):
-            parentBone = ourModel["rig"][thisBone["parent"]]
+            parentBone = ourModel["rig_dict"][thisBone["parent"]]
             DebugMsg( "- Parenting "+i+" to "+thisBone["parent"]+"!" )
             sfmUtils.ParentMaintainWorld( thisBone["_rig"], parentBone["_rig"] )
             
     # Knee parents
     for i in ourModel["ikjoint"]:   
         DebugMsg( "- Parenting "+i["knee"] )
-        sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig"][i["end"]]["_rig"] )
+        sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig_dict"][i["end"]]["_rig"] )
         
     sfm.SetDefault()
     
     # Set up handle constraints
     DebugMsg( "Setting up handle constraints..." )
-    for i in ourModel["rig"]:
+    for i in ourModel["rig_dict"]:
         thisName = i
-        thisRig = ourModel["rig"][i]["_rig"]
-        thisDag = ourModel["rig"][i]["_dag"]
+        thisRig = ourModel["rig_dict"][i]["_rig"]
+        thisDag = ourModel["rig_dict"][i]["_dag"]
         
         if ( IsInIKJoint( ourModel["ikjoint"], i ) ):
             continue
         
-        if "constraint_type" in ourModel["rig"][i]:
-            if ( ourModel["rig"][i]["constraint_type"] == 1 ):
+        if "constraint_type" in ourModel["rig_dict"][i]:
+            if ( ourModel["rig_dict"][i]["constraint_type"] == 1 ):
                 DebugMsg( "- Constraining "+thisName+" with CreatePointConstraint." )
                 CreatePointConstraint( thisRig, thisDag )
                 continue                
-            if ( ourModel["rig"][i]["constraint_type"] == 2 ):
+            if ( ourModel["rig_dict"][i]["constraint_type"] == 2 ):
                 DebugMsg( "- Constraining "+thisName+" with CreateOrientConstraint." )
                 CreateOrientConstraint( thisRig, thisDag )
                 continue
@@ -311,9 +321,9 @@ def BuildRig():
         
     for i in ourModel["ikjoint"]:   
         DebugMsg( "- Creating an IK joint, "+i["start"]+" - "+i["middle"]+" - "+i["end"]+" (Knee: "+i["knee"]+")" )
-        ikStart = ourModel["rig"][i["start"]]
-        ikMiddle = ourModel["rig"][i["middle"]]
-        ikEnd = ourModel["rig"][i["end"]]
+        ikStart = ourModel["rig_dict"][i["start"]]
+        ikMiddle = ourModel["rig_dict"][i["middle"]]
+        ikEnd = ourModel["rig_dict"][i["end"]]
         sfmUtils.BuildArmLeg( i["_knee"], ikEnd["_rig"], ikStart["_dag"], ikEnd["_dag"], i["constrainfoot"] )
         
     # ARMS AND LEGS - TODO
@@ -325,16 +335,20 @@ def BuildRig():
         
     DebugMsg( "Applying categories..." )
     for i in ourModel["rigs"]:
-        thisRig = ourModel["rig"][i["name"]]
+        thisRig = ourModel["rig_dict"][i["name"]]
         thisCategory = FindCategory( ourModel["categories"], thisRig["category"] )
         DebugMsg( "- Adding "+i["name"]+" to "+thisRig["category"] )
         sfmUtils.AddDagControlsToGroup( thisCategory, thisRig["_rig"] )	
         
     for i in ourModel["ikjoint"]:
-        thisRig = ourModel["rig"][i["knee"]]
+        thisRig = ourModel["rig_dict"][i["knee"]]
         thisCategory = FindCategory( ourModel["categories"], thisRig["category"] )
         DebugMsg( "- Adding "+i["knee"]+" to "+thisRig["category"] )
         sfmUtils.AddDagControlsToGroup( thisCategory, i["_knee"] )	
+    
+    for i in ourModel["categories_order"]:
+        DebugMsg("Moving "+i+" to the bottom.")
+        FindCategoryParent( ourModel["categories"], i, rootGroup ).MoveChildToBottom( FindCategory( ourModel["categories"], i ) )
     
     sfm.EndRig()
     print "Done."
