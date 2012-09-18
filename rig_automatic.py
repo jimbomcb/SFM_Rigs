@@ -219,6 +219,14 @@ def BuildRig():
            
     if ( ourModel == False ) :
 		raise Exception("Sorry! Unable to find any rig for this model. (" + gameModel.GetModelName() + ")")
+        
+    # Dump the json rig list into a dict
+    # PS: i'm bad at python - this is so we can do ourModel["rig"][rigname] instead of having to find the right 
+    # element in the list. We use the list later on because it maintains the correct order which is needed
+    # for the category setup! Please show me a better way of doing this.
+    ourModel["rig"] = {} 
+    for i in ourModel["rigs"]:
+        ourModel["rig"][i["name"]] = i
         	
     # Grab our Dags
     DebugMsg( "Finding dags..." )
@@ -316,10 +324,10 @@ def BuildRig():
     ourModel["categories"] = SetupCategory( ourModel["categories"], rootGroup,  json_rig["settings"]["colours"] )
         
     DebugMsg( "Applying categories..." )
-    for i in ourModel["rig"]:
-        thisRig = ourModel["rig"][i]
+    for i in ourModel["rigs"]:
+        thisRig = ourModel["rig"][i["name"]]
         thisCategory = FindCategory( ourModel["categories"], thisRig["category"] )
-        DebugMsg( "- Adding "+i+" to "+thisRig["category"] )
+        DebugMsg( "- Adding "+i["name"]+" to "+thisRig["category"] )
         sfmUtils.AddDagControlsToGroup( thisCategory, thisRig["_rig"] )	
         
     for i in ourModel["ikjoint"]:
