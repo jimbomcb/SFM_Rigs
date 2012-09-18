@@ -268,6 +268,9 @@ def BuildRig():
                 dagStart = ourModel["rig_dict"][i["offset"]["start"]]["_dag"]
                 dagEnd = ourModel["rig_dict"][i["offset"]["end"]]["_dag"]
                 ikOffset = ComputeVectorBetweenBones( dagStart, dagEnd, i["offset"]["dist"] )
+            else:
+                DebugMsg("-- Setting joint offset - vs.Vector("+str(i["offset"][0])+","+str(i["offset"][1])+","+str(i["offset"][2])+")")
+                ikOffset = vs.Vector(i["offset"][0],i["offset"][1],i["offset"][2])
         
         i["_knee"] = sfmUtils.CreateOffsetHandle( "rig_knee_"+i["knee"], ourModel["rig_dict"][i["knee"]]["_rig"], ikOffset, bCreateControls=False ) 
         allRigHandles += [ i["_knee"] ]
@@ -326,8 +329,6 @@ def BuildRig():
         ikEnd = ourModel["rig_dict"][i["end"]]
         sfmUtils.BuildArmLeg( i["_knee"], ikEnd["_rig"], ikStart["_dag"], ikEnd["_dag"], i["constrainfoot"] )
         
-    # ARMS AND LEGS - TODO
-    
     # Set up categories
     DebugMsg( "Setting up categories..." )
     HideControlGroups( rig, rootGroup, "Body", "Arms", "Legs", "Unknown", "Other", "Root" )
