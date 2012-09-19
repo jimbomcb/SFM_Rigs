@@ -1,0 +1,448 @@
+{
+    "settings": {
+		"outofdate":false,
+        "colours": {
+            "topLevel": [40,160,255],
+            "leftLimb": [100,255,100],
+            "rightLimb": [255,100,100]
+        }
+    },
+    "asw_drone": {
+        "models": [
+            "models/aliens/drone/drone.mdl"
+        ],
+        "categories": {
+            "RigBody": { "colour": "topLevel" ,
+                "children": {
+					"RigTail": { 	"colour": "topLevel" }
+				}
+			},
+            "RigHead": { "colour": "topLevel"},
+            "RigClaws": { "colour": "topLevel",
+                "children": {
+					"TopLeftClaw": { "colour": "leftLimb" },
+					"TopRightClaw": { "colour": "rightLimb" },
+					"BottomLeftClaw": { "colour": "leftLimb" },
+					"BottomRightClaw": { "colour": "rightLimb" }
+				}
+			},
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		"categories_order": [ "RigHead", "RigClaws", "RigBody", "RigLegs", "LeftLeg", "RightLeg", "TopLeftClaw", "TopRightClaw", "BottomLeftClaw", "BottomRightClaw" ],
+        "rigs": [
+            {"name":"rigBase", 		"category": "RigBody", 		"bone": "root", 		"parent": "root"},
+			
+            {"name":"rigSpine1", 	"category": "RigBody", 		"bone": "spine1", 		"parent": "rigBase"},
+            {"name":"rigSpine2", 	"category": "RigBody", 		"bone": "spine2", 		"parent": "rigSpine1"},
+            {"name":"rigHead", 		"category": "RigHead", 		"bone": "head", 		"parent": "rigSpine2"},
+			
+            {"name":"rigTail1", 	"category": "RigTail", 		"bone": "tailJt01", 	"parent": "rigSpine1"},
+            {"name":"rigTail2", 	"category": "RigTail", 		"bone": "tailJt02", 	"parent": "rigTail1"},
+            {"name":"rigTail3", 	"category": "RigTail", 		"bone": "tailJt03", 	"parent": "rigTail2"},
+            {"name":"rigTail4", 	"category": "RigTail", 		"bone": "tailJt04", 	"parent": "rigTail3"},
+			
+            {"name":"rigLegL1", 	"category": "LeftLeg", 		"bone": "thighLf", 		"parent": "rigBase"},
+            {"name":"rigLegL2", 	"category": "LeftLeg", 		"bone": "forelegLf", 	"parent": "rigLegL1"},
+            {"name":"rigLegL3", 	"category": "LeftLeg", 		"bone": "clawLf", 		"parent": "rigLegL2"},
+            {"name":"rigLegR1", 	"category": "RightLeg", 	"bone": "thighRt", 		"parent": "rigBase"},
+            {"name":"rigLegR2", 	"category": "RightLeg", 	"bone": "forelegRt", 	"parent": "rigLegR1"},
+            {"name":"rigLegR3", 	"category": "RightLeg", 	"bone": "clawRt", 		"parent": "rigLegR2"},
+			
+            {"name":"rigClawTL1", 	"category": "TopLeftClaw", 	"bone": "bicepUpLf",	"parent": "rigHead"},
+            {"name":"rigClawTL2", 	"category": "TopLeftClaw", 	"bone": "forearmUpLf",	"parent": "rigClawTL1"},
+            {"name":"rigClawTL3", 	"category": "TopLeftClaw", 	"bone": "handUpLf",		"parent": "rigClawTL2"},
+			
+            {"name":"rigClawTR1", 	"category": "TopRightClaw", "bone": "bicepUpRt",	"parent": "rigHead"},
+            {"name":"rigClawTR2", 	"category": "TopRightClaw", "bone": "forearmUpRt",	"parent": "rigClawTR1"},
+            {"name":"rigClawTR3", 	"category": "TopRightClaw", "bone": "handUpRt",		"parent": "rigClawTR2"},
+			
+            {"name":"rigClawBL1", 	"category": "BottomLeftClaw", 	"bone": "bicepLoLf",	"parent": "rigHead"},
+            {"name":"rigClawBL2", 	"category": "BottomLeftClaw", 	"bone": "forearmLoLf",	"parent": "rigClawBL1"},
+            {"name":"rigClawBL3", 	"category": "BottomLeftClaw", 	"bone": "handLoLf",		"parent": "rigClawBL2"},
+			
+            {"name":"rigClawBR1", 	"category": "BottomRightClaw", "bone": "bicepLoRt",		"parent": "rigHead"},
+            {"name":"rigClawBR2", 	"category": "BottomRightClaw", "bone": "forearmLoRt",	"parent": "rigClawBR1"},
+            {"name":"rigClawBR3", 	"category": "BottomRightClaw", "bone": "handLoRt",		"parent": "rigClawBR2"}
+
+        ],
+		"ikjoint": [
+			{ "start": "rigLegL1", "middle": "rigLegL2", "end": "rigLegL3", "knee": "rigLegL2", "constrainfoot":true, "offset": { "start":"rigLegL3", "end":"rigLegL2", "dist":12 } },
+			{ "start": "rigLegR1", "middle": "rigLegR2", "end": "rigLegR3", "knee": "rigLegR2", "constrainfoot":true, "offset": { "start":"rigLegR3", "end":"rigLegR2", "dist":12 } },
+			
+			{ "start": "rigClawTL1", "middle": "rigClawTL2", "end": "rigClawTL3", "knee": "rigClawTL2", "kneeparent":false, "constrainfoot":"false", "offset": { "start":"rigClawTL3", "end":"rigClawTL2", "dist":16 } },
+			{ "start": "rigClawTR1", "middle": "rigClawTR2", "end": "rigClawTR3", "knee": "rigClawTR2", "kneeparent":false, "constrainfoot":"false", "offset": { "start":"rigClawTR3", "end":"rigClawTR2", "dist":16 } },
+			{ "start": "rigClawBL1", "middle": "rigClawBL2", "end": "rigClawBL3", "knee": "rigClawBL2", "kneeparent":false, "constrainfoot":"false", "offset": { "start":"rigClawBL3", "end":"rigClawBL2", "dist":16 } },
+			{ "start": "rigClawBR1", "middle": "rigClawBR2", "end": "rigClawBR3", "knee": "rigClawBR2", "kneeparent":false, "constrainfoot":"false", "offset": { "start":"rigClawBR3", "end":"rigClawBR2", "dist":16 } }
+		]
+    },
+    "asw_mortar": {
+        "models": [
+            "models/aliens/mortar/mortar.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" ,
+                "children": {
+					"RigTail": { 	"colour": "topLevel" }
+				}
+			},
+            "RigHead": { "colour": "topLevel"},
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"FrontLeftLeg": { 	"colour": "leftLimb" },
+					"FrontRightLeg": { 	"colour": "rightLimb" },
+					"MiddleLeftLeg": { 	"colour": "leftLimb" },
+					"MiddleRightLeg": { "colour": "rightLimb" },
+					"RearLeftLeg": { 	"colour": "leftLimb" },
+					"RearRightLeg": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigLegs", 
+		"FrontLeftLeg", "FrontRightLeg", "MiddleLeftLeg", "MiddleRightLeg", "RearLeftLeg", "RearRightLeg" ],
+		
+        "rigs": [
+            {"name":"rigBase", 		"category": "RigBody", 		"bone": "root", 		"parent": "root"},
+			
+            {"name":"rigSpine1", 	"category": "RigBody", 		"bone": "spine01", 		"parent": "rigBase"},
+            {"name":"rigSpine2", 	"category": "RigBody", 		"bone": "spine02", 		"parent": "rigSpine1"},
+            {"name":"rigSpine3", 	"category": "RigBody", 		"bone": "spine03", 		"parent": "rigSpine2"},
+			
+            {"name":"rigGums1", 	"category": "RigHead", 		"bone": "gumsA01", 		"parent": "rigSpine3"},
+            {"name":"rigGums2", 	"category": "RigHead", 		"bone": "gumsB01", 		"parent": "rigGums1"},
+            {"name":"rigGums3", 	"category": "RigHead", 		"bone": "gumsC01", 		"parent": "rigGums2"},
+			
+            {"name":"rigLegFL1", 	"category": "FrontLeftLeg", 		"bone": "frontLegLf01", 	"parent": "rigSpine2"},
+            {"name":"rigLegFL2", 	"category": "FrontLeftLeg", 		"bone": "frontLegLf02", 	"parent": "rigLegFL1"},
+            {"name":"rigLegFL3", 	"category": "FrontLeftLeg", 		"bone": "frontLegLf03", 	"parent": "rigLegFL2"},
+            {"name":"rigLegFL4", 	"category": "FrontLeftLeg", 		"bone": "frontLegLf04", 	"parent": "rigLegFL3", "constraint_type":2},
+			
+            {"name":"rigLegFR1", 	"category": "FrontRightLeg", 		"bone": "frontLegRt01", 	"parent": "rigSpine2"},
+            {"name":"rigLegFR2", 	"category": "FrontRightLeg", 		"bone": "frontLegRt02", 	"parent": "rigLegFR1"},
+            {"name":"rigLegFR3", 	"category": "FrontRightLeg", 		"bone": "frontLegRt03", 	"parent": "rigLegFR2"},
+            {"name":"rigLegFR4", 	"category": "FrontRightLeg", 		"bone": "frontLegRt04", 	"parent": "rigLegFR3", "constraint_type":2},
+			
+            {"name":"rigLegML1", 	"category": "MiddleLeftLeg", 		"bone": "rearLegALf01", 	"parent": "rigBase"},
+            {"name":"rigLegML2", 	"category": "MiddleLeftLeg", 		"bone": "rearLegALf02", 	"parent": "rigLegML1"},
+            {"name":"rigLegML3", 	"category": "MiddleLeftLeg", 		"bone": "rearLegALf03", 	"parent": "rigLegML2"},
+			
+            {"name":"rigLegMR1", 	"category": "MiddleRightLeg", 		"bone": "rearLegARt01", 	"parent": "rigBase"},
+            {"name":"rigLegMR2", 	"category": "MiddleRightLeg", 		"bone": "rearLegARt02", 	"parent": "rigLegMR1"},
+            {"name":"rigLegMR3", 	"category": "MiddleRightLeg", 		"bone": "rearLegARt03", 	"parent": "rigLegMR2"},
+			
+            {"name":"rigLegRL1", 	"category": "RearLeftLeg", 			"bone": "rearLegBLf01", 	"parent": "rigBase"},
+            {"name":"rigLegRL2", 	"category": "RearLeftLeg", 			"bone": "rearLegBLf02", 	"parent": "rigLegRL1"},
+            {"name":"rigLegRL3", 	"category": "RearLeftLeg", 			"bone": "rearLegBLf03", 	"parent": "rigLegRL2"},
+			
+            {"name":"rigLegRR1", 	"category": "RearRightLeg", 		"bone": "rearLegBRt01", 	"parent": "rigBase"},
+            {"name":"rigLegRR2", 	"category": "RearRightLeg", 		"bone": "rearLegBRt02", 	"parent": "rigLegRR1"},
+            {"name":"rigLegRR3", 	"category": "RearRightLeg", 		"bone": "rearLegBRt03", 	"parent": "rigLegRR2"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rigLegFL1", "middle": "rigLegFL2", "end": "rigLegFL3", "knee": "rigLegFL2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegFR1", "middle": "rigLegFR2", "end": "rigLegFR3", "knee": "rigLegFR2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegML1", "middle": "rigLegML2", "end": "rigLegML3", "knee": "rigLegML2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegMR1", "middle": "rigLegMR2", "end": "rigLegMR3", "knee": "rigLegMR2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegRL1", "middle": "rigLegRL2", "end": "rigLegRL3", "knee": "rigLegRL2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegRR1", "middle": "rigLegRR2", "end": "rigLegRR3", "knee": "rigLegRR2", "constrainfoot":true, "offset": [0,-16,0] }
+		]
+		
+    },
+	"asw_mortar3": {
+        "models": [
+            "models/aliens/mortar3/mortar3.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" ,
+                "children": {
+					"RigTail": { 	"colour": "topLevel" }
+				}
+			},
+            "RigHead": { "colour": "topLevel"},
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"FrontLeftLeg": { 	"colour": "leftLimb" },
+					"FrontRightLeg": { 	"colour": "rightLimb" },
+					"RearLeftLeg": { 	"colour": "leftLimb" },
+					"RearRightLeg": { 	"colour": "rightLimb" }
+				}
+            },
+            "RigArms": { "colour": "topLevel",
+                "children": {
+					"LeftArms": { "colour": "leftLimb" },
+					"RightArms": { "colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigArms", "RigBody", "RigLegs", 
+		"FrontLeftLeg", "FrontRightLeg", "RearLeftLeg", "RearRightLeg",
+		"LeftArms","RightArms"],
+		
+        "rigs": [
+            {"name":"rigBase", 		"category": "RigBody", 		"bone": "root", 		"parent": "root"},
+			
+            {"name":"rigSpine1", 	"category": "RigBody", 		"bone": "joint2", 		"parent": "rigBase"},
+						
+            {"name":"rigLegFL1", 	"category": "FrontLeftLeg", 		"bone": "leg_Lf_146", 		"parent": "rigBase"},
+            {"name":"rigLegFL2", 	"category": "FrontLeftLeg", 		"bone": "leg_Lf_147", 		"parent": "rigLegFL1"},
+            {"name":"rigLegFL3", 	"category": "FrontLeftLeg", 		"bone": "leg_Lf_148", 		"parent": "rigLegFL2"},
+			
+            {"name":"rigLegFR1", 	"category": "FrontRightLeg", 		"bone": "leg_Rt_150", 		"parent": "rigBase"},
+            {"name":"rigLegFR2", 	"category": "FrontRightLeg", 		"bone": "leg_Rt_151", 		"parent": "rigLegFR1"},
+            {"name":"rigLegFR3", 	"category": "FrontRightLeg", 		"bone": "leg_Rt_152", 		"parent": "rigLegFR2"},
+			
+            {"name":"rigLegRL1", 	"category": "RearLeftLeg", 			"bone": "leg_Lf_158", 		"parent": "rigBase"},
+            {"name":"rigLegRL2", 	"category": "RearLeftLeg", 			"bone": "leg_Lf_159", 		"parent": "rigLegRL1"},
+            {"name":"rigLegRL3", 	"category": "RearLeftLeg", 			"bone": "leg_Lf_160", 		"parent": "rigLegRL2"},
+			
+            {"name":"rigLegRR1", 	"category": "RearRightLeg", 		"bone": "leg_Rt_154", 		"parent": "rigBase"},
+            {"name":"rigLegRR2", 	"category": "RearRightLeg", 		"bone": "leg_Rt_155", 		"parent": "rigLegRR1"},
+            {"name":"rigLegRR3", 	"category": "RearRightLeg", 		"bone": "leg_Rt_156", 		"parent": "rigLegRR2"},
+			
+            {"name":"rigArmL1_1", 	"category": "LeftArms", 			"bone": "arm1_Lf_186", 		"parent": "rigSpine1"},
+            {"name":"rigArmL1_2", 	"category": "LeftArms", 			"bone": "arm1_Lf_187", 		"parent": "rigArmL1_1"},
+            {"name":"rigArmL1_3", 	"category": "LeftArms", 			"bone": "arm1_Lf_188", 		"parent": "rigArmL1_2"},
+            {"name":"rigArmL2_1", 	"category": "LeftArms", 			"bone": "arm2_Lf_190", 		"parent": "rigSpine1"},
+            {"name":"rigArmL2_2", 	"category": "LeftArms", 			"bone": "arm2_Lf_191", 		"parent": "rigArmL2_1"},
+            {"name":"rigArmL2_3", 	"category": "LeftArms", 			"bone": "arm2_Lf_192", 		"parent": "rigArmL2_2"},
+            {"name":"rigArmL3_1", 	"category": "LeftArms", 			"bone": "arm3_Lf_194", 		"parent": "rigSpine1"},
+            {"name":"rigArmL3_2", 	"category": "LeftArms", 			"bone": "arm3_Lf_195", 		"parent": "rigArmL3_1"},
+            {"name":"rigArmL3_3", 	"category": "LeftArms", 			"bone": "arm3_Lf_196", 		"parent": "rigArmL3_2"},
+			
+            {"name":"rigArmR1_1", 	"category": "RightArms", 			"bone": "arm1_Rt_198", 		"parent": "rigSpine1"},
+            {"name":"rigArmR1_2", 	"category": "RightArms", 			"bone": "arm1_Rt_199", 		"parent": "rigArmR1_1"},
+            {"name":"rigArmR1_3", 	"category": "RightArms", 			"bone": "arm1_Rt_200", 		"parent": "rigArmR1_2"},
+            {"name":"rigArmR2_1", 	"category": "RightArms", 			"bone": "arm2_Rt_202", 		"parent": "rigSpine1"},
+            {"name":"rigArmR2_2", 	"category": "RightArms", 			"bone": "arm2_Rt_203", 		"parent": "rigArmR2_1"},
+            {"name":"rigArmR2_3", 	"category": "RightArms", 			"bone": "arm2_Rt_204", 		"parent": "rigArmR2_2"},
+            {"name":"rigArmR3_1", 	"category": "RightArms", 			"bone": "arm3_Rt_206", 		"parent": "rigSpine1"},
+            {"name":"rigArmR3_2", 	"category": "RightArms", 			"bone": "arm3_Rt_207", 		"parent": "rigArmR3_1"},
+            {"name":"rigArmR3_3", 	"category": "RightArms", 			"bone": "arm3_Rt_208", 		"parent": "rigArmR3_2"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rigLegFL1", "middle": "rigLegFL2", "end": "rigLegFL3", "knee": "rigLegFL2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegFR1", "middle": "rigLegFR2", "end": "rigLegFR3", "knee": "rigLegFR2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegRL1", "middle": "rigLegRL2", "end": "rigLegRL3", "knee": "rigLegRL2", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLegRR1", "middle": "rigLegRR2", "end": "rigLegRR3", "knee": "rigLegRR2", "constrainfoot":true, "offset": [0,-16,0] },
+			
+			{ "start": "rigArmL1_1", "middle": "rigArmL1_2", "end": "rigArmL1_3", "knee": "rigArmL1_2", "constrainfoot":true, "offset": [0,16,0] },
+			{ "start": "rigArmL2_1", "middle": "rigArmL2_2", "end": "rigArmL2_3", "knee": "rigArmL2_2", "constrainfoot":true, "offset": [16,3,0] },
+			{ "start": "rigArmL3_1", "middle": "rigArmL3_2", "end": "rigArmL3_3", "knee": "rigArmL3_2", "constrainfoot":true, "offset": [0,-16,0] },
+			
+			{ "start": "rigArmR1_1", "middle": "rigArmR1_2", "end": "rigArmR1_3", "knee": "rigArmR1_2", "constrainfoot":true, "offset": [0,16,0] },
+			{ "start": "rigArmR2_1", "middle": "rigArmR2_2", "end": "rigArmR2_3", "knee": "rigArmR2_2", "constrainfoot":true, "offset": [-16,3,0] },
+			{ "start": "rigArmR3_1", "middle": "rigArmR3_2", "end": "rigArmR3_3", "knee": "rigArmR3_2", "constrainfoot":true, "offset": [0,-16,0] }
+		]
+		
+    },
+    "asw_shaman": {
+        "models": [
+            "models/aliens/shaman/shaman.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" ,
+                "children": {
+					"RigTail": { 	"colour": "topLevel" }
+				}
+			},
+            "RigHead": { "colour": "topLevel"},
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigLegs", 
+		"LeftLeg", "RightLeg" ],
+		
+        "rigs": [
+            {"name":"rigBase", 		"category": "RigBody", 		"bone": "root", 		"parent": "root"},
+			
+            {"name":"rigSpine1", 	"category": "RigBody", 		"bone": "spine1", 		"parent": "rigBase"},
+			
+            {"name":"rigSideR", 	"category": "RigBody", 		"bone": "joint8", 		"parent": "rigBase"},
+            {"name":"rigSideL", 	"category": "RigBody", 		"bone": "joint4", 		"parent": "rigBase"},
+			
+            {"name":"rigLegL1_1", 	"category": "LeftLeg", 		"bone": "legFront_Lf_0", "parent": "rigSpine1"},
+            {"name":"rigLegL1_2", 	"category": "LeftLeg", 		"bone": "legFront_Lf_1", "parent": "rigLegL1_1"},			
+            {"name":"rigLegR1_1", 	"category": "RightLeg", 	"bone": "legFront_Rt_0", "parent": "rigSpine1"},
+            {"name":"rigLegR1_2", 	"category": "RightLeg", 	"bone": "legFront_Rt_1", "parent": "rigLegR1_1"},
+			
+            {"name":"rigLegL2_1", 	"category": "LeftLeg", 		"bone": "legBack_Lf_0", "parent": "rigSpine1"},
+            {"name":"rigLegL2_2", 	"category": "LeftLeg", 		"bone": "legBack_Lf_1", "parent": "rigLegL2_1"},			
+            {"name":"rigLegR2_1", 	"category": "RightLeg", 	"bone": "legBack_Rt_0", "parent": "rigSpine1"},
+            {"name":"rigLegR2_2", 	"category": "RightLeg", 	"bone": "legBack_Rt_1", "parent": "rigLegR2_1"}
+
+        ],
+		
+		"ikjoint": [
+		]
+		
+    },
+	"asw_harvester": {
+        "models": [
+            "models/aliens/harvester/harvester.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" ,
+                "children": {
+					"RigTail": { 	"colour": "topLevel" }
+				}
+			},
+            "RigHead": { "colour": "topLevel"},
+            "RigArms": { "colour": "topLevel"},
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigArms", "RigLegs", 
+		"LeftLeg", "RightLeg" ],
+		
+        "rigs": [
+            {"name":"rigBase", 		"category": "RigBody", 		"bone": "root", 		"parent": "root"},
+			
+            {"name":"rigSpine1", 	"category": "RigBody", 		"bone": "spine01", 		"parent": "rigBase"},
+            {"name":"rigSpine2", 	"category": "RigBody", 		"bone": "spine02", 		"parent": "rigSpine1"},
+            {"name":"rigRearSpine1", "category": "RigBody", 		"bone": "rearSpine01", 		"parent": "rigBase"},
+            {"name":"rigRearSpine2", "category": "RigBody", 		"bone": "rearSpine02", 		"parent": "rigRearSpine1"},
+            {"name":"rigSack", 		"category": "RigBody", 		"bone": "sack1", 		"parent": "rigRearSpine2"},
+						
+            {"name":"rigLegLA_1", 	"category": "LeftLeg", 		"bone": "legALf01", "parent": "rigSpine2"},
+            {"name":"rigLegLA_2", 	"category": "LeftLeg", 		"bone": "legALf02", "parent": "rigLegLA_1"},
+            {"name":"rigLegLA_3", 	"category": "LeftLeg", 		"bone": "legALf03", "parent": "rigLegLA_2"},
+            {"name":"rigLegLB_1", 	"category": "LeftLeg", 		"bone": "legBLf01", "parent": "rigSpine1"},
+            {"name":"rigLegLB_2", 	"category": "LeftLeg", 		"bone": "legBLf02", "parent": "rigLegLB_1"},
+            {"name":"rigLegLB_3", 	"category": "LeftLeg", 		"bone": "legBLf03", "parent": "rigLegLB_2"},
+            {"name":"rigLegLC_1", 	"category": "LeftLeg", 		"bone": "legCLf01", "parent": "rigBase"},
+            {"name":"rigLegLC_2", 	"category": "LeftLeg", 		"bone": "legCLf02", "parent": "rigLegLC_1"},
+            {"name":"rigLegLC_3", 	"category": "LeftLeg", 		"bone": "legCLf03", "parent": "rigLegLC_2"},
+			
+            {"name":"rigLegRA_1", 	"category": "RightLeg", 		"bone": "legARt01", "parent": "rigSpine2"},
+            {"name":"rigLegRA_2", 	"category": "RightLeg", 		"bone": "legARt02", "parent": "rigLegRA_1"},
+            {"name":"rigLegRA_3", 	"category": "RightLeg", 		"bone": "legARt03", "parent": "rigLegRA_2"},
+            {"name":"rigLegRB_1", 	"category": "RightLeg", 		"bone": "legBRt01", "parent": "rigSpine1"},
+            {"name":"rigLegRB_2", 	"category": "RightLeg", 		"bone": "legBRt02", "parent": "rigLegRB_1"},
+            {"name":"rigLegRB_3", 	"category": "RightLeg", 		"bone": "legBRt03", "parent": "rigLegRB_2"},
+            {"name":"rigLegRC_1", 	"category": "RightLeg", 		"bone": "legCRt01", "parent": "rigBase"},
+            {"name":"rigLegRC_2", 	"category": "RightLeg", 		"bone": "legCRt02", "parent": "rigLegRC_1"},
+            {"name":"rigLegRC_3", 	"category": "RightLeg", 		"bone": "legCRt03", "parent": "rigLegRC_2"},
+			
+            {"name":"rigArmA_1", 	"category": "RigArms", 			"bone": "armA01", "parent": "rigRearSpine2"},
+            {"name":"rigArmA_2", 	"category": "RigArms", 			"bone": "armA02", "parent": "rigArmA_1"},
+            {"name":"rigArmA_3", 	"category": "RigArms", 			"bone": "armA03", "parent": "rigArmA_2"},
+            {"name":"rigArmB_1", 	"category": "RigArms", 			"bone": "armB01", "parent": "rigRearSpine2"},
+            {"name":"rigArmB_2", 	"category": "RigArms", 			"bone": "armB02", "parent": "rigArmB_1"},
+            {"name":"rigArmB_3", 	"category": "RigArms", 			"bone": "armB03", "parent": "rigArmB_2"},
+            {"name":"rigArmC_1", 	"category": "RigArms", 			"bone": "armC01", "parent": "rigRearSpine2"},
+            {"name":"rigArmC_2", 	"category": "RigArms", 			"bone": "armC02", "parent": "rigArmC_1"},
+            {"name":"rigArmC_3", 	"category": "RigArms", 			"bone": "armC03", "parent": "rigArmC_2"},
+            {"name":"rigArmD_1", 	"category": "RigArms", 			"bone": "armD01", "parent": "rigRearSpine2"},
+            {"name":"rigArmD_2", 	"category": "RigArms", 			"bone": "armD02", "parent": "rigArmD_1"},
+            {"name":"rigArmD_3", 	"category": "RigArms", 			"bone": "armD03", "parent": "rigArmD_2"},
+            {"name":"rigArmE_1", 	"category": "RigArms", 			"bone": "armE01", "parent": "rigRearSpine2"},
+            {"name":"rigArmE_2", 	"category": "RigArms", 			"bone": "armE02", "parent": "rigArmE_1"},
+            {"name":"rigArmE_3", 	"category": "RigArms", 			"bone": "armE03", "parent": "rigArmE_2"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rigLegLA_1", "middle": "rigLegLA_2", "end": "rigLegLA_3", "knee": "rigLegLA_2", "constrainfoot":true, "offset": [0,16,0] },
+			{ "start": "rigLegLB_1", "middle": "rigLegLB_2", "end": "rigLegLB_3", "knee": "rigLegLB_2", "constrainfoot":true, "offset": [0,16,0] },
+			{ "start": "rigLegLC_1", "middle": "rigLegLC_2", "end": "rigLegLC_3", "knee": "rigLegLC_2", "constrainfoot":true, "offset": [0,16,0] },
+			{ "start": "rigLegRA_1", "middle": "rigLegRA_2", "end": "rigLegRA_3", "knee": "rigLegRA_2", "constrainfoot":true, "offset": [0,16,0] },
+			{ "start": "rigLegRB_1", "middle": "rigLegRB_2", "end": "rigLegRB_3", "knee": "rigLegRB_2", "constrainfoot":true, "offset": [0,16,0] },
+			{ "start": "rigLegRC_1", "middle": "rigLegRC_2", "end": "rigLegRC_3", "knee": "rigLegRC_2", "constrainfoot":true, "offset": [0,16,0] }
+		]
+		
+    },
+	"asw_shieldbug": {
+        "models": [
+            "models/aliens/shieldbug/shieldbug.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" ,
+                "children": {
+					"RigTail": { 	"colour": "topLevel" }
+				}
+			},
+            "RigHead": { "colour": "topLevel"},
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigLegs", "LeftLeg", "RightLeg" ],
+		
+        "rigs": [
+            {"name":"rigBase", 		"category": "RigBody", 		"bone": "root", 		"parent": "root"},
+			
+            {"name":"rigSpine1", 	"category": "RigBody", 		"bone": "spine_0", 		"parent": "rigBase"},
+            {"name":"rigSpine2", 	"category": "RigBody", 		"bone": "spine_1", 		"parent": "rigSpine1"},
+            {"name":"rigHead", 		"category": "RigHead", 		"bone": "spine_2", 		"parent": "rigSpine2"},
+			
+            {"name":"rigHeadKnuckleL1", 	"category": "RigHead", 		"bone": "headKnuckle01_Lf", "parent": "rigSpine2"},
+            {"name":"rigHeadKnuckleL2", 	"category": "RigHead", 		"bone": "headKnuckle03_Lf", "parent": "rigHeadKnuckleL1"},					
+            {"name":"rigHeadKnuckleR1", 	"category": "RigHead", 		"bone": "headKnuckle01_Rt", "parent": "rigSpine2"},
+            {"name":"rigHeadKnuckleR2", 	"category": "RigHead", 		"bone": "headKnuckle03_Rt", "parent": "rigHeadKnuckleR1"},
+			
+            {"name":"rigHeadBubble", 	"category": "RigHead", 		"bone": "bubble", 		"parent": "rigHead"},
+            {"name":"rigHeadInternal", 	"category": "RigHead", 		"bone": "internals", 	"parent": "rigHeadBubble"},
+						
+            {"name":"rigLegLA_1", 	"category": "LeftLeg", 		"bone": "frontLeg_0_Lf", "parent": "rigBase"},
+            {"name":"rigLegLA_2", 	"category": "LeftLeg", 		"bone": "frontLeg_1_Lf", "parent": "rigLegLA_1"},
+            {"name":"rigLegLA_3", 	"category": "LeftLeg", 		"bone": "frontLeg_2_Lf", "parent": "rigLegLA_2"},
+            {"name":"rigLegLB_1", 	"category": "LeftLeg", 		"bone": "sideLeg_0_Lf", "parent": "rigBase"},
+            {"name":"rigLegLB_2", 	"category": "LeftLeg", 		"bone": "sideLeg_1_Lf", "parent": "rigLegLB_1"},
+            {"name":"rigLegLB_3", 	"category": "LeftLeg", 		"bone": "sideLeg_2_Lf", "parent": "rigLegLB_2"},
+            {"name":"rigLegLC_1", 	"category": "LeftLeg", 		"bone": "backLeg_0_Lf", "parent": "rigBase"},
+            {"name":"rigLegLC_2", 	"category": "LeftLeg", 		"bone": "backLeg_1_Lf", "parent": "rigLegLC_1"},
+            {"name":"rigLegLC_3", 	"category": "LeftLeg", 		"bone": "backLeg_2_Lf", "parent": "rigLegLC_2"},
+			
+            {"name":"rigLegRA_1", 	"category": "RightLeg", 		"bone": "frontLeg_0_Rt", "parent": "rigBase"},
+            {"name":"rigLegRA_2", 	"category": "RightLeg", 		"bone": "frontLeg_1_Rt", "parent": "rigLegRA_1"},
+            {"name":"rigLegRA_3", 	"category": "RightLeg", 		"bone": "frontLeg_2_Rt", "parent": "rigLegRA_2"},
+            {"name":"rigLegRB_1", 	"category": "RightLeg", 		"bone": "sideLeg_0_Rt", "parent": "rigBase"},
+            {"name":"rigLegRB_2", 	"category": "RightLeg", 		"bone": "sideLeg_1_Rt", "parent": "rigLegRB_1"},
+            {"name":"rigLegRB_3", 	"category": "RightLeg", 		"bone": "sideLeg_2_Rt", "parent": "rigLegRB_2"},
+            {"name":"rigLegRC_1", 	"category": "RightLeg", 		"bone": "backLeg_0_Rt", "parent": "rigBase"},
+            {"name":"rigLegRC_2", 	"category": "RightLeg", 		"bone": "backLeg_1_Rt", "parent": "rigLegRC_1"},
+            {"name":"rigLegRC_3", 	"category": "RightLeg", 		"bone": "backLeg_2_Rt", "parent": "rigLegRC_2"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rigLegLA_1", "middle": "rigLegLA_2", "end": "rigLegLA_3", "knee": "rigLegLA_2", "kneeparent":false, "constrainfoot":true, "offset": [0,-25,0] },
+			{ "start": "rigLegLB_1", "middle": "rigLegLB_2", "end": "rigLegLB_3", "knee": "rigLegLB_2", "kneeparent":false, "constrainfoot":true, "offset": [0,-25,0] },
+			{ "start": "rigLegLC_1", "middle": "rigLegLC_2", "end": "rigLegLC_3", "knee": "rigLegLC_2", "kneeparent":false, "constrainfoot":true, "offset": [0,-25,0] },
+			{ "start": "rigLegRA_1", "middle": "rigLegRA_2", "end": "rigLegRA_3", "knee": "rigLegRA_2", "kneeparent":false, "constrainfoot":true, "offset": [0,-25,0] },
+			{ "start": "rigLegRB_1", "middle": "rigLegRB_2", "end": "rigLegRB_3", "knee": "rigLegRB_2", "kneeparent":false, "constrainfoot":true, "offset": [0,-25,0] },
+			{ "start": "rigLegRC_1", "middle": "rigLegRC_2", "end": "rigLegRC_3", "knee": "rigLegRC_2", "kneeparent":false, "constrainfoot":true, "offset": [0,-25,0] }
+		]
+		
+    }
+
+	}
