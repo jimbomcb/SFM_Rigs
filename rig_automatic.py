@@ -6,33 +6,6 @@
 # 1 = CreatePointConstraint
 # 2 = CreateOrientConstraint
 
-# SAMPLE!
-
-# {
-	# "settings": {
-		# "colours":{
-			# "topLevel":		[40, 160, 255],
-		# }
-	# },
-	
-    # "drone": {
-        # "models": ["models/aliens/drone/drone.mdl"],
-        # "categories": {
-            # "RigBody": {
-				# "colour": "topLevel",
-                # "children": {}
-            # }
-        # },
-        # "rig": {
-            # "rigBase": {
-                # "category": "RigBody",
-                # "bone": "root",
-                # "parent": "root" # The root bone is automatically generated for all models.
-            # },
-        # }
-    # }
-# }
-
 import vs
 import sfm
 import os
@@ -294,8 +267,16 @@ def BuildRig():
             
     # Knee parents
     for i in ourModel["ikjoint"]:   
-        DebugMsg( "- Parenting "+i["knee"] )
-        sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig_dict"][i["end"]]["_rig"] )
+        if "kneeparent" in i:
+            if ( i["kneeparent"] == False ):
+                DebugMsg( "- Parenting "+i["knee"]+" to root." )
+                sfmUtils.ParentMaintainWorld( i["_knee"], rigRoot )
+            else:
+                DebugMsg( "- Parenting "+i["knee"]+" to "+i["kneeparent"]+"." )
+                sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig_dict"][i["kneeparent"]]["_rig"] )
+        else:
+            DebugMsg( "- Parenting "+i["knee"]+" to "+i["end"]+"." )
+            sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig_dict"][i["end"]]["_rig"] )
         
     sfm.SetDefault()
     
