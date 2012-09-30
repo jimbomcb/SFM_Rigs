@@ -506,6 +506,257 @@
 			{ "start": "rig_upperarm_R", "middle": "rig_forearm_R", "end": "rig_hand_R", "knee": "rig_forearm_R", "knee_name": "rig_elbow_R", "kneeparent": "rig_collar_R", "constrainfoot":true, "offset": { "start":"rig_spine_2", "end":"rig_upperarm_R", "dist":15 } }
 		]
 		
+    },
+	
+	"l4d2_charger": {
+        "models": [
+            "models/infected/charger.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" },
+            "RigHead": { "colour": "topLevel" },
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            },
+            "RigArms": { "colour": "topLevel",
+                "children": {
+					"RightArm": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigArms", "RigLegs", "LeftLeg", "RightLeg", "RightArm" ],
+		
+        "rigs": [
+            {"name":"rig_pelvis", 		"category": "RigBody", 		"bone": "bip_pelvis", 	"parent": "root"},
+			
+            {"name":"rig_spine_0", 	"category": "RigBody", 			"bone": "bip_spine_0", 		"parent": "rig_pelvis"},
+            {"name":"rig_spine_1", 	"category": "RigBody", 			"bone": "bip_spine_1", 		"parent": "rig_spine_0"},
+            {"name":"rig_spine_2", 	"category": "RigBody", 			"bone": "bip_spine_2", 		"parent": "rig_spine_1"},
+            {"name":"rig_neck", 	"category": "RigHead", 			"bone": "bip_neck", 		"parent": "rig_spine_2"},	
+            {"name":"rig_head", 	"category": "RigHead", 			"bone": "bip_head", 		"parent": "rig_neck"},
+			
+            {"name":"rig_thigh_L", 	"category": "LeftLeg", 			"bone": "bip_hip_L", "parent": "rig_pelvis"},
+            {"name":"rig_calf_L", 	"category": "LeftLeg", 			"bone": "bip_knee_L", "parent": "rig_thigh_L"},
+            {"name":"rig_foot_L", 	"category": "LeftLeg", 			"bone": "bip_foot_L", "parent": "rig_calf_L"},
+            {"name":"rig_toe_L", 	"category": "LeftLeg", 			"bone": "bip_toe_L", "parent": "rig_foot_L"},
+			
+            {"name":"rig_thigh_R", 	"category": "RightLeg", 		"bone": "bip_hip_R", "parent": "rig_pelvis"},
+            {"name":"rig_calf_R", 	"category": "RightLeg", 		"bone": "bip_knee_R", "parent": "rig_thigh_R"},
+            {"name":"rig_foot_R", 	"category": "RightLeg", 		"bone": "bip_foot_R", "parent": "rig_calf_R"},
+            {"name":"rig_toe_R", 	"category": "RightLeg", 		"bone": "bip_toe_R", "parent": "rig_foot_R"},
+			
+            {"name":"rig_collar_R", 	"category": "RightArm", 		"bone": "bip_collar_R", "parent": "rig_spine_2"},
+            {"name":"rig_upperarm_R", 	"category": "RightArm", 		"bone": "bip_upperArm_R", "parent": "bip_collar_R"},
+            {"name":"rig_forearm_R", 	"category": "RightArm", 		"bone": "bip_lowerArm_R", "parent": "bip_upperArm_R"},
+            {"name":"rig_hand_R", 		"category": "RightArm", 		"bone": "bip_hand_R", "parent": "bip_lowerArm_R"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rig_thigh_R", "middle": "rig_calf_R", "end": "rig_foot_R", "knee": "rig_calf_R", "knee_name": "rig_knee_R", "constrainfoot":true, "offset": { "start":"rig_foot_R", "end":"rig_toe_R", "dist":15 } },
+			{ "start": "rig_thigh_L", "middle": "rig_calf_L", "end": "rig_foot_L", "knee": "rig_calf_L", "knee_name": "rig_knee_L", "constrainfoot":true, "offset": { "start":"rig_foot_L", "end":"rig_toe_L", "dist":15 } },
+			{ "start": "rig_upperarm_R", "middle": "rig_forearm_R", "end": "rig_hand_R", "knee": "rig_forearm_R", "knee_name": "rig_elbow_R", "kneeparent": "rig_collar_R", "constrainfoot":true, "offset": { "start":"rig_spine_2", "end":"rig_upperarm_R", "dist":15 } }
+		]
+		
+    },
+	"rig_biped_bip": {
+        "models": [
+            "models/infected/jockey.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" },
+            "RigHead": { "colour": "topLevel" },
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            },
+            "RigArms": { "colour": "topLevel",
+                "children": {
+					"LeftArm": { 	"colour": "leftLimb" },
+					"RightArm": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigArms", "RigLegs", "LeftLeg", "RightLeg", "LeftArm", "RightArm" ],
+		
+        "rigs": [
+            {"name":"rig_pelvis", 		"category": "RigBody", 		"bone": "bip_pelvis", 	"parent": "root"},
+			
+            {"name":"rig_spine_0", 	"category": "RigBody", 			"bone": "bip_spine_0", 		"parent": "rig_pelvis"},
+            {"name":"rig_spine_1", 	"category": "RigBody", 			"bone": "bip_spine_1", 		"parent": "rig_spine_0"},
+            {"name":"rig_spine_2", 	"category": "RigBody", 			"bone": "bip_spine_2", 		"parent": "rig_spine_1"},
+            {"name":"rig_neck", 	"category": "RigHead", 			"bone": "bip_neck", 		"parent": "rig_spine_2"},	
+            {"name":"rig_head", 	"category": "RigHead", 			"bone": "bip_head", 		"parent": "rig_neck"},
+			
+            {"name":"rig_thigh_L", 	"category": "LeftLeg", 			"bone": "bip_hip_L", "parent": "rig_pelvis"},
+            {"name":"rig_calf_L", 	"category": "LeftLeg", 			"bone": "bip_knee_L", "parent": "rig_thigh_L"},
+            {"name":"rig_foot_L", 	"category": "LeftLeg", 			"bone": "bip_foot_L", "parent": "rig_calf_L"},
+            {"name":"rig_toe_L", 	"category": "LeftLeg", 			"bone": "bip_toe_L", "parent": "rig_foot_L"},
+			
+            {"name":"rig_thigh_R", 	"category": "RightLeg", 		"bone": "bip_hip_R", "parent": "rig_pelvis"},
+            {"name":"rig_calf_R", 	"category": "RightLeg", 		"bone": "bip_knee_R", "parent": "rig_thigh_R"},
+            {"name":"rig_foot_R", 	"category": "RightLeg", 		"bone": "bip_foot_R", "parent": "rig_calf_R"},
+            {"name":"rig_toe_R", 	"category": "RightLeg", 		"bone": "bip_toe_R", "parent": "rig_foot_R"},
+			
+            {"name":"rig_collar_L", 	"category": "LeftArm", 		"bone": "bip_collar_L", "parent": "rig_spine_2"},
+            {"name":"rig_upperarm_L", 	"category": "LeftArm", 		"bone": "bip_upperArm_L", "parent": "bip_collar_L"},
+            {"name":"rig_forearm_L", 	"category": "LeftArm", 		"bone": "bip_lowerArm_L", "parent": "bip_upperArm_L"},
+            {"name":"rig_hand_L", 		"category": "LeftArm", 		"bone": "bip_hand_L", "parent": "bip_lowerArm_L"},
+			
+            {"name":"rig_collar_R", 	"category": "RightArm", 		"bone": "bip_collar_R", "parent": "rig_spine_2"},
+            {"name":"rig_upperarm_R", 	"category": "RightArm", 		"bone": "bip_upperArm_R", "parent": "bip_collar_R"},
+            {"name":"rig_forearm_R", 	"category": "RightArm", 		"bone": "bip_lowerArm_R", "parent": "bip_upperArm_R"},
+            {"name":"rig_hand_R", 		"category": "RightArm", 		"bone": "bip_hand_R", "parent": "bip_lowerArm_R"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rig_thigh_R", "middle": "rig_calf_R", "end": "rig_foot_R", "knee": "rig_calf_R", "knee_name": "rig_knee_R", "constrainfoot":true, "offset": { "start":"rig_foot_R", "end":"rig_toe_R", "dist":10 } },
+			{ "start": "rig_thigh_L", "middle": "rig_calf_L", "end": "rig_foot_L", "knee": "rig_calf_L", "knee_name": "rig_knee_L", "constrainfoot":true, "offset": { "start":"rig_foot_L", "end":"rig_toe_L", "dist":10 } },
+			{ "start": "rig_upperarm_L", "middle": "rig_forearm_L", "end": "rig_hand_L", "knee": "rig_forearm_L", "knee_name": "rig_elbow_L", "kneeparent": "rig_collar_L", "constrainfoot":true, "offset": { "start":"rig_foot_L", "end":"rig_toe_L", "dist":-10 } },
+			{ "start": "rig_upperarm_R", "middle": "rig_forearm_R", "end": "rig_hand_R", "knee": "rig_forearm_R", "knee_name": "rig_elbow_R", "kneeparent": "rig_collar_R", "constrainfoot":true, "offset": { "start":"rig_foot_R", "end":"rig_toe_R", "dist":-10 } }
+		]
+		
+    },
+	"l4d2_spitter": {
+        "models": [
+            "models/infected/spitter.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" },
+            "RigHead": { "colour": "topLevel" },
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            },
+            "RigArms": { "colour": "topLevel",
+                "children": {
+					"LeftArm": { 	"colour": "leftLimb" },
+					"RightArm": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigArms", "RigLegs", "LeftLeg", "RightLeg", "LeftArm", "RightArm" ],
+		
+        "rigs": [
+            {"name":"rig_pelvis", 		"category": "RigBody", 		"bone": "bip_pelvis", 	"parent": "root"},
+			
+            {"name":"rig_spine_0", 	"category": "RigBody", 			"bone": "bip_spine_0", 		"parent": "rig_pelvis"},
+            {"name":"rig_spine_1", 	"category": "RigBody", 			"bone": "bip_spine_1", 		"parent": "rig_spine_0"},
+            {"name":"rig_spine_2", 	"category": "RigBody", 			"bone": "bip_spine_2", 		"parent": "rig_spine_1"},
+            {"name":"rig_neck1", 	"category": "RigHead", 			"bone": "bip_neck_0", 		"parent": "rig_spine_2"},	
+            {"name":"rig_neck2", 	"category": "RigHead", 			"bone": "bip_neck_1", 		"parent": "rig_neck1"},	
+            {"name":"rig_head", 	"category": "RigHead", 			"bone": "bip_head", 		"parent": "rig_neck2"},
+			
+            {"name":"rig_thigh_L", 	"category": "LeftLeg", 			"bone": "bip_hip_L", "parent": "rig_pelvis"},
+            {"name":"rig_calf_L", 	"category": "LeftLeg", 			"bone": "bip_knee_L", "parent": "rig_thigh_L"},
+            {"name":"rig_foot_L", 	"category": "LeftLeg", 			"bone": "bip_foot_L", "parent": "rig_calf_L"},
+            {"name":"rig_toe_L", 	"category": "LeftLeg", 			"bone": "bip_toe_L", "parent": "rig_foot_L"},
+			
+            {"name":"rig_thigh_R", 	"category": "RightLeg", 		"bone": "bip_hip_R", "parent": "rig_pelvis"},
+            {"name":"rig_calf_R", 	"category": "RightLeg", 		"bone": "bip_knee_R", "parent": "rig_thigh_R"},
+            {"name":"rig_foot_R", 	"category": "RightLeg", 		"bone": "bip_foot_R", "parent": "rig_calf_R"},
+            {"name":"rig_toe_R", 	"category": "RightLeg", 		"bone": "bip_toe_R", "parent": "rig_foot_R"},
+			
+            {"name":"rig_collar_L", 	"category": "LeftArm", 		"bone": "bip_collar_L", "parent": "rig_spine_2"},
+            {"name":"rig_upperarm_L", 	"category": "LeftArm", 		"bone": "bip_upperArm_L", "parent": "bip_collar_L"},
+            {"name":"rig_forearm_L", 	"category": "LeftArm", 		"bone": "bip_lowerArm_L", "parent": "bip_upperArm_L"},
+            {"name":"rig_hand_L", 		"category": "LeftArm", 		"bone": "bip_hand_L", "parent": "bip_lowerArm_L"},
+			
+            {"name":"rig_collar_R", 	"category": "RightArm", 		"bone": "bip_collar_R", "parent": "rig_spine_2"},
+            {"name":"rig_upperarm_R", 	"category": "RightArm", 		"bone": "bip_upperArm_R", "parent": "bip_collar_R"},
+            {"name":"rig_forearm_R", 	"category": "RightArm", 		"bone": "bip_lowerArm_R", "parent": "bip_upperArm_R"},
+            {"name":"rig_hand_R", 		"category": "RightArm", 		"bone": "bip_hand_R", "parent": "bip_lowerArm_R"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rig_thigh_R", "middle": "rig_calf_R", "end": "rig_foot_R", "knee": "rig_calf_R", "knee_name": "rig_knee_R", "constrainfoot":true, "offset": { "start":"rig_foot_R", "end":"rig_toe_R", "dist":10 } },
+			{ "start": "rig_thigh_L", "middle": "rig_calf_L", "end": "rig_foot_L", "knee": "rig_calf_L", "knee_name": "rig_knee_L", "constrainfoot":true, "offset": { "start":"rig_foot_L", "end":"rig_toe_L", "dist":10 } },
+			{ "start": "rig_upperarm_L", "middle": "rig_forearm_L", "end": "rig_hand_L", "knee": "rig_forearm_L", "knee_name": "rig_elbow_L", "kneeparent": "rig_collar_L", "constrainfoot":true, "offset": { "start":"rig_foot_L", "end":"rig_toe_L", "dist":-10 } },
+			{ "start": "rig_upperarm_R", "middle": "rig_forearm_R", "end": "rig_hand_R", "knee": "rig_forearm_R", "knee_name": "rig_elbow_R", "kneeparent": "rig_collar_R", "constrainfoot":true, "offset": { "start":"rig_foot_R", "end":"rig_toe_R", "dist":-10 } }
+		]
+		
+    },
+	"rig_biped_valvebip_4spine": {
+        "models": [
+            "models/infected/smoker.mdl",
+            "models/infected/boomer.mdl",
+            "models/infected/boomette.mdl",
+            "models/infected/hunter.mdl",
+            "models/infected/witch.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" },
+            "RigHead": { "colour": "topLevel" },
+            "RigLegs": { "colour": "topLevel",
+                "children": {
+					"LeftLeg": { 	"colour": "leftLimb" },
+					"RightLeg": { 	"colour": "rightLimb" }
+				}
+            },
+            "RigArms": { "colour": "topLevel",
+                "children": {
+					"LeftArm": { 	"colour": "leftLimb" },
+					"RightArm": { 	"colour": "rightLimb" }
+				}
+            }
+        },
+		
+		"categories_order": [ "RigHead", "RigBody", "RigArms", "RigLegs", "LeftLeg", "RightLeg", "LeftArm", "RightArm" ],
+		
+        "rigs": [
+            {"name":"rig_pelvis", 		"category": "RigBody", 		"bone": "ValveBiped.Bip01_Pelvis", 	"parent": "root"},
+			
+            {"name":"rig_spine_0", 	"category": "RigBody", 		"bone": "ValveBiped.Bip01_Spine1", 		"parent": "rig_pelvis"},
+            {"name":"rig_spine_1", 	"category": "RigBody", 		"bone": "ValveBiped.Bip01_Spine2", 		"parent": "rig_spine_0"},
+            {"name":"rig_spine_2", 	"category": "RigBody", 		"bone": "ValveBiped.Bip01_Spine4", 		"parent": "rig_spine_1"},
+            {"name":"rig_neck", 	"category": "RigHead", 		"bone": "ValveBiped.Bip01_Neck1", 		"parent": "rig_spine_2"},	
+            {"name":"rig_head", 	"category": "RigHead", 		"bone": "ValveBiped.Bip01_Head1", 		"parent": "rig_neck"},
+			
+            {"name":"rig_thigh_L", 	"category": "LeftLeg", 		"bone": "ValveBiped.Bip01_L_Thigh", "parent": "rig_pelvis"},
+            {"name":"rig_calf_L", 	"category": "LeftLeg", 		"bone": "ValveBiped.Bip01_L_Calf", "parent": "rig_thigh_L"},
+            {"name":"rig_foot_L", 	"category": "LeftLeg", 		"bone": "ValveBiped.Bip01_L_Foot", "parent": "rig_calf_L"},
+            {"name":"rig_toe_L", 	"category": "LeftLeg", 		"bone": "ValveBiped.Bip01_L_Toe0", "parent": "rig_foot_L"},
+			
+            {"name":"rig_thigh_R", 	"category": "RightLeg", 	"bone": "ValveBiped.Bip01_R_Thigh", "parent": "rig_pelvis"},
+            {"name":"rig_calf_R", 	"category": "RightLeg", 	"bone": "ValveBiped.Bip01_R_Calf", "parent": "rig_thigh_R"},
+            {"name":"rig_foot_R", 	"category": "RightLeg", 	"bone": "ValveBiped.Bip01_R_Foot", "parent": "rig_calf_R"},
+            {"name":"rig_toe_R", 	"category": "RightLeg", 	"bone": "ValveBiped.Bip01_R_Toe0", "parent": "rig_foot_R"},
+			
+            {"name":"rig_collar_L", 	"category": "LeftArm", 		"bone": "ValveBiped.Bip01_L_Clavicle", "parent": "rig_spine_2"},
+            {"name":"rig_upperarm_L", 	"category": "LeftArm", 		"bone": "ValveBiped.Bip01_L_UpperArm", "parent": "rig_collar_L"},
+            {"name":"rig_forearm_L", 	"category": "LeftArm", 		"bone": "ValveBiped.Bip01_L_Forearm", "parent": "rig_upperarm_L"},
+            {"name":"rig_hand_L", 		"category": "LeftArm", 		"bone": "ValveBiped.Bip01_L_Hand", "parent": "rig_forearm_L"},
+			
+            {"name":"rig_collar_R", 	"category": "LeftArm", 		"bone": "ValveBiped.Bip01_R_Clavicle", "parent": "rig_spine_2"},
+            {"name":"rig_upperarm_R", 	"category": "LeftArm", 		"bone": "ValveBiped.Bip01_R_UpperArm", "parent": "rig_collar_R"},
+            {"name":"rig_forearm_R", 	"category": "RightArm", 	"bone": "ValveBiped.Bip01_R_Forearm", "parent": "rig_upperarm_R"},
+            {"name":"rig_hand_R", 		"category": "RightArm", 	"bone": "ValveBiped.Bip01_R_Hand", "parent": "rig_forearm_R"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rig_thigh_R", "middle": "rig_calf_R", "end": "rig_foot_R", "knee": "rig_calf_R", "knee_name": "rig_knee_R", "constrainfoot":true, "offset": { "start":"rig_foot_R", "end":"rig_toe_R", "dist":10 } },
+			{ "start": "rig_thigh_L", "middle": "rig_calf_L", "end": "rig_foot_L", "knee": "rig_calf_L", "knee_name": "rig_knee_L", "constrainfoot":true, "offset": { "start":"rig_foot_L", "end":"rig_toe_L", "dist":10 } },
+			{ "start": "rig_upperarm_L", "middle": "rig_forearm_L", "end": "rig_hand_L", "knee": "rig_forearm_L", "knee_name": "rig_elbow_L", "kneeparent": "rig_collar_L", "constrainfoot":true, "offset": { "start":"rig_foot_L", "end":"rig_toe_L", "dist":-10 } },
+			{ "start": "rig_upperarm_R", "middle": "rig_forearm_R", "end": "rig_hand_R", "knee": "rig_forearm_R", "knee_name": "rig_elbow_R", "kneeparent": "rig_collar_R", "constrainfoot":true, "offset": { "start":"rig_foot_R", "end":"rig_toe_R", "dist":-10 } }
+		]
+		
     }
 
 	}

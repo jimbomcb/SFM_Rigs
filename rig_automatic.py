@@ -16,7 +16,7 @@ from vs import dmeutils
 animUtils = dmeutils.CDmAnimUtils
     
 filesystem_path = "platform/scripts/sfm/animset/json_rigger/rig_feed.json" ## If the filesystem path exists, we use it, otherwise grab the URL.
-json_url = "https://dl.jimbomcb.net.s3.amazonaws.com/rigger/rig_feed.json"
+json_url = "https://json.rigger.s3.amazonaws.com/rig_feed.json"
 isLocal = ( os.path.isfile(filesystem_path) )
 
 IK_NONE = 0
