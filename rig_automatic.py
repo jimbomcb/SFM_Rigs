@@ -19,6 +19,12 @@ filesystem_path = "platform/scripts/sfm/animset/json_rigger/rig_feed.json" ## If
 json_url = "https://dl.jimbomcb.net.s3.amazonaws.com/rigger/rig_feed.json"
 isLocal = ( os.path.isfile(filesystem_path) )
 
+IK_NONE = 0
+IK_THIGH = 1
+IK_KNEE = 2
+IK_FOOT = 3
+IK_KNEE_HELPER = 4
+
 def DebugMsg( msg ):
     if ( isLocal == True ):
         print "JSONRIG: "+msg
@@ -70,10 +76,17 @@ def SetupCategory( list, rootGroup, colours, level = 1, parent = None ):
 def IsInIKJoint( list, name ):
 
     for i in list:   
-        if ( i["start"] == name or i["middle"] == name or i["end"] == name or i["knee"] == name ):
-            return True      
+        if ( i["start"] == name ):
+            return IK_THIGH 
+        if ( i["middle"] == name ):
+            return IK_KNEE
+        if ( i["end"] == name ):
+            return IK_FOOT  
+        if ( i["knee"] == name ):
+            return IK_KNEE_HELPER
         
-    return False
+    return IK_NONE
+ 
     
 def AddValidObjectToList( objectList, obj ):
     if ( obj != None ): objectList.append( obj )
@@ -224,11 +237,21 @@ def BuildRig():
     DebugMsg( "Generating handles..." )
     rigRoot = sfmUtils.CreateConstrainedHandle( "rig_root",  boneRoot,  bCreateControls=False )
     allRigHandles = [ rigRoot ];
-    for i in ourModel["rig_dict"]:   
+    for i in ourModel["rig_dict"]:  
+    
+        iIsInIK = IsInIKJoint( ourModel["ikjoint"], i )
+        if ( iIsInIK == IK_THIGH or iIsInIK == IK_KNEE ):
+            ourModel["rig_dict"][i]["_rig"] = False
+            continue
+            
         DebugMsg( "- Created handle: "+i+" for "+ourModel["rig_dict"][i]["bone"] )
         ourModel["rig_dict"][i]["_rig"] = sfmUtils.CreateConstrainedHandle( i, ourModel["rig_dict"][i]["_dag"], bCreateControls=False )
         allRigHandles += [ ourModel["rig_dict"][i]["_rig"] ]
         
+        if ( iIsInIK == IK_FOOT ): # Generate our foot helper, used for parenting stuff to it.
+            DebugMsg( "- Created handle: rig_helper_"+i+" for "+ourModel["rig_dict"][i]["bone"] )
+            ourModel["rig_dict"][i]["_helper"] = sfmUtils.CreateConstrainedHandle( "rig_helper_"+i, ourModel["rig_dict"][i]["_dag"], bCreateControls=False )
+                    
     # Generate knee helper handles - TODO: offsets defined in json
     DebugMsg( "Generating IK PVTarget..." )
     for i in ourModel["ikjoint"]:   
@@ -245,7 +268,11 @@ def BuildRig():
                 DebugMsg("-- Setting joint offset - vs.Vector("+str(i["offset"][0])+","+str(i["offset"][1])+","+str(i["offset"][2])+")")
                 ikOffset = vs.Vector(i["offset"][0],i["offset"][1],i["offset"][2])
         
-        i["_knee"] = sfmUtils.CreateOffsetHandle( "rig_knee_"+i["knee"], ourModel["rig_dict"][i["knee"]]["_rig"], ikOffset, bCreateControls=False ) 
+        knee_name = "rig_knee_"+i["knee"]
+        if "knee_name" in i:
+            knee_name = i["knee_name"]
+            
+        i["_knee"] = sfmUtils.CreateOffsetHandle( knee_name, ourModel["rig_dict"][i["knee"]]["_dag"], ikOffset, bCreateControls=False ) 
         allRigHandles += [ i["_knee"] ]
                 
     sfm.ClearSelection()
@@ -257,25 +284,54 @@ def BuildRig():
     DebugMsg( "Setting up parents..." )
     for i in ourModel["rig_dict"]:
         thisBone = ourModel["rig_dict"][i]
-        if ( thisBone["parent"] == "root" or IsInIKJoint( ourModel["ikjoint"], i ) ):
+        
+        if ( not thisBone["_rig"] ):
+            continue
+        
+        iIsInIK = IsInIKJoint( ourModel["ikjoint"], i )
+                
+        if ( iIsInIK == IK_FOOT ):
+            DebugMsg( "- Parenting IK FOOT "+i+" to root!" )
+            sfmUtils.ParentMaintainWorld( thisBone["_rig"], rigRoot )            
+            sfmUtils.ParentMaintainWorld( thisBone["_helper"], rigRoot ) 
+        elif ( iIsInIK != IK_NONE ):
+            continue
+        elif ( thisBone["parent"] == "root" ):
             DebugMsg( "- Parenting "+i+" to root!" )
             sfmUtils.ParentMaintainWorld( thisBone["_rig"], rigRoot )
         elif ( thisBone["parent"] != False ):
             parentBone = ourModel["rig_dict"][thisBone["parent"]]
-            DebugMsg( "- Parenting "+i+" to "+thisBone["parent"]+"!" )
-            sfmUtils.ParentMaintainWorld( thisBone["_rig"], parentBone["_rig"] )
+            
+            if ( not parentBone["_rig"] ):
+                continue                
+                
+            parentRig = parentBone["_rig"]
+            
+            iIsParentInIK = IsInIKJoint( ourModel["ikjoint"], thisBone["parent"] )
+            if ( iIsParentInIK == IK_FOOT and iIsInIK != IK_KNEE_HELPER ):
+                DebugMsg( "- Parenting "+i+" to "+thisBone["parent"]+" HELPER!" )
+                parentRig = parentBone["_helper"]
+            else:            
+                DebugMsg( "- Parenting "+i+" to "+thisBone["parent"]+"!" )
+                
+            sfmUtils.ParentMaintainWorld( thisBone["_rig"], parentRig )
             
     # Knee parents
     for i in ourModel["ikjoint"]:   
+    
+        knee_name = "rig_knee_"+i["knee"]
+        if "knee_name" in i:
+            knee_name = i["knee_name"]
+            
         if "kneeparent" in i:
             if ( i["kneeparent"] == False ):
-                DebugMsg( "- Parenting "+i["knee"]+" to root." )
+                DebugMsg( "- Parenting "+knee_name+" to root." )
                 sfmUtils.ParentMaintainWorld( i["_knee"], rigRoot )
             else:
-                DebugMsg( "- Parenting "+i["knee"]+" to "+i["kneeparent"]+"." )
+                DebugMsg( "- Parenting "+knee_name+" to "+i["kneeparent"]+"." )
                 sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig_dict"][i["kneeparent"]]["_rig"] )
         else:
-            DebugMsg( "- Parenting "+i["knee"]+" to "+i["end"]+"." )
+            DebugMsg( "- Parenting "+knee_name+" to "+i["end"]+"." )
             sfmUtils.ParentMaintainWorld( i["_knee"], ourModel["rig_dict"][i["end"]]["_rig"] )
         
     sfm.SetDefault()
@@ -287,7 +343,10 @@ def BuildRig():
         thisRig = ourModel["rig_dict"][i]["_rig"]
         thisDag = ourModel["rig_dict"][i]["_dag"]
         
-        if ( IsInIKJoint( ourModel["ikjoint"], i ) ):
+        if ( not thisRig ):
+            continue
+        
+        if ( IsInIKJoint( ourModel["ikjoint"], i ) != IK_NONE ):
             continue
         
         if "constraint_type" in ourModel["rig_dict"][i]:
@@ -314,13 +373,24 @@ def BuildRig():
     DebugMsg( "Setting up categories..." )
     HideControlGroups( rig, rootGroup, "Body", "Arms", "Legs", "Unknown", "Other", "Root" )
     ourModel["categories"] = SetupCategory( ourModel["categories"], rootGroup,  json_rig["settings"]["colours"] )
+    
+    rigHelpersGroup = rootGroup.CreateControlGroup( "RigHelpers" )
+    rigHelpersGroup.SetVisible( False )
+    rigHelpersGroup.SetSnappable( False )
         
     DebugMsg( "Applying categories..." )
     for i in ourModel["rigs"]:
-        thisRig = ourModel["rig_dict"][i["name"]]
+        thisRig = ourModel["rig_dict"][i["name"]]        
+        if ( not thisRig["_rig"] ):
+            continue        
         thisCategory = FindCategory( ourModel["categories"], thisRig["category"] )
         DebugMsg( "- Adding "+i["name"]+" to "+thisRig["category"] )
         sfmUtils.AddDagControlsToGroup( thisCategory, thisRig["_rig"] )	
+        
+        # If we're an IK foot, we have a helper! Stick it in the helper group.        
+        iIsInIK = IsInIKJoint( ourModel["ikjoint"], i["name"] )
+        if ( iIsInIK == IK_FOOT ):
+            sfmUtils.AddDagControlsToGroup( rigHelpersGroup, thisRig["_helper"] )
         
     for i in ourModel["ikjoint"]:
         thisRig = ourModel["rig_dict"][i["knee"]]
