@@ -48,6 +48,13 @@ Robots:
 -
 Rigging for the Blacklight Retribution mechs in http://www.garrysmod.org/downloads/?a=view&id=132382
 
+*setup_particle_timescale*
+-
+When ran on a particle animation set, it creates an adjustable and keyframeable controller for timescale control, used for either speeding up or slowing down particle simuation.
+
+*setup_selfillumtint*
+-
+Creates a controller which adjusts the brightness of all self-illum textures on the animation set. Used for self-illum lighting tweaks or animation.
 
 *By*
 --
