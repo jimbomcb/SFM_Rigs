@@ -55,9 +55,9 @@ def SetupCategory( list, rootGroup, colours, level = 1, parent = None ):
         indents = ""
         for _ in range(level):
             indents += "-"
-        DebugMsg( indents+" Created "+i )
+        DebugMsg( indents+" Created "+str(i) )
         
-        list[i]["_category"] = rootGroup.CreateControlGroup( i )
+        list[i]["_category"] = rootGroup.CreateControlGroup( str(i) )
         
         if ( parent != None ):
             parent.AddChild( list[i]["_category"] )	
@@ -168,7 +168,7 @@ def BuildRig():
         json_rig = json.load(resp)
     else:
         print "Reading JSON Rigging script from "+filesystem_path
-        json_data=open('platform/scripts/sfm/animset/json_rigger/rig_feed.json')
+        json_data=open(filesystem_path)
         json_rig = json.load(json_data)
         json_data.close()
         
@@ -185,7 +185,7 @@ def BuildRig():
     rootGroup = animSet.GetRootControlGroup()
 	    
     # Start the biped rig to which all of the controls and constraints will be added
-    rig = sfm.BeginRig( "rig_" + animSet.GetName() );
+    rig = sfm.BeginRig( "autorig__" + animSet.GetName() );
     if ( rig == None ):
         return
     

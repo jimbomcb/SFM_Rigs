@@ -97,6 +97,7 @@ def BuildRig():
     sfm.SetReferencePose()
 
     isBullsquid = False
+    isBullsquidJiggle = False
     isHoundeye = False
     isGarg = False
     isAGrunt = False
@@ -109,13 +110,17 @@ def BuildRig():
     if ( gameModel.GetModelName() == "models/xenians/bullsquid.mdl" ) :
 		isBullsquid = True
 		
+    if ( gameModel.GetModelName() == "models/sfm/jimbomcb/bm_bullsquid_jigglebone.mdl" ) :
+		isBullsquid = True
+		isBullsquidJiggle = True
+		
     if ( gameModel.GetModelName() == "models/xenians/houndeye.mdl" ) :
 		isHoundeye = True
 		
     if ( gameModel.GetModelName() == "models/xenians/garg.mdl" ) :
 		isGarg = True
 		
-    if ( 	gameModel.GetModelName() == "models/xenians/agrunt.mdl" or
+    if ( gameModel.GetModelName() == "models/xenians/agrunt.mdl" or
 			gameModel.GetModelName() == "models/xenians/agrunt_02.mdl" or
 			gameModel.GetModelName() == "models/xenians/agrunt_unarmored.mdl") :
 		isAGrunt = True
@@ -154,18 +159,19 @@ def BuildRig():
 		boneAnkleL    	= sfmUtils.FindFirstDag( [ "Ankle_R" ], True )
 		boneToeL    	= sfmUtils.FindFirstDag( [ "Toe_R" ], True )
 		
-		boneTent12_1	= sfmUtils.FindFirstDag( [ "Tentacle_1200_1" ], True )
-		boneTent12_2	= sfmUtils.FindFirstDag( [ "Tentacle_1200_2" ], True )
-		boneTent1_1		= sfmUtils.FindFirstDag( [ "Tentacle_100_1" ], True )
-		boneTent1_2		= sfmUtils.FindFirstDag( [ "Tentacle_100_2" ], True )
-		boneTent4_1		= sfmUtils.FindFirstDag( [ "Tentacle_400_1" ], True )
-		boneTent4_2		= sfmUtils.FindFirstDag( [ "Tentacle_400_2" ], True )
-		boneTent6_1		= sfmUtils.FindFirstDag( [ "Tentacle_600_1" ], True )
-		boneTent6_2		= sfmUtils.FindFirstDag( [ "Tentacle_600_2" ], True )
-		boneTent8_1		= sfmUtils.FindFirstDag( [ "Tentacle_800_1" ], True )
-		boneTent8_2		= sfmUtils.FindFirstDag( [ "Tentacle_800_2" ], True )
-		boneTent11_1	= sfmUtils.FindFirstDag( [ "Tentacle_1100_1" ], True )
-		boneTent11_2	= sfmUtils.FindFirstDag( [ "Tentacle_1100_2" ], True )
+		if ( isBullsquidJiggle == False ) : 
+			boneTent12_1	= sfmUtils.FindFirstDag( [ "Tentacle_1200_1" ], True )
+			boneTent12_2	= sfmUtils.FindFirstDag( [ "Tentacle_1200_2" ], True )
+			boneTent1_1		= sfmUtils.FindFirstDag( [ "Tentacle_100_1" ], True )
+			boneTent1_2		= sfmUtils.FindFirstDag( [ "Tentacle_100_2" ], True )
+			boneTent4_1		= sfmUtils.FindFirstDag( [ "Tentacle_400_1" ], True )
+			boneTent4_2		= sfmUtils.FindFirstDag( [ "Tentacle_400_2" ], True )
+			boneTent6_1		= sfmUtils.FindFirstDag( [ "Tentacle_600_1" ], True )
+			boneTent6_2		= sfmUtils.FindFirstDag( [ "Tentacle_600_2" ], True )
+			boneTent8_1		= sfmUtils.FindFirstDag( [ "Tentacle_800_1" ], True )
+			boneTent8_2		= sfmUtils.FindFirstDag( [ "Tentacle_800_2" ], True )
+			boneTent11_1	= sfmUtils.FindFirstDag( [ "Tentacle_1100_1" ], True )
+			boneTent11_2	= sfmUtils.FindFirstDag( [ "Tentacle_1100_2" ], True )
     
 		boneTail1      	= sfmUtils.FindFirstDag( [ "Tail_1" ], True )
 		boneTail2      	= sfmUtils.FindFirstDag( [ "Tail_2" ], True )
@@ -387,18 +393,19 @@ def BuildRig():
 		rigAnkleL    	= sfmUtils.CreateConstrainedHandle( "rig_ankle_l",    	boneAnkleL,    	bCreateControls=False )
 		rigToeL    		= sfmUtils.CreateConstrainedHandle( "rig_toe_l",    	boneToeL,    	bCreateControls=False )
 		
-		rigTent12_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_12_1", 	boneTent12_1, 	bCreateControls=False )
-		rigTent12_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_12_2",  	boneTent12_2, 	bCreateControls=False )
-		rigTent1_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_1_1", 	boneTent1_1, 	bCreateControls=False )
-		rigTent1_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_1_2",  	boneTent1_2, 	bCreateControls=False )
-		rigTent4_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_4_1", 	boneTent4_1, 	bCreateControls=False )
-		rigTent4_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_4_2",  	boneTent4_2, 	bCreateControls=False )
-		rigTent6_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_6_1", 	boneTent6_1, 	bCreateControls=False )
-		rigTent6_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_6_2",  	boneTent6_2, 	bCreateControls=False )
-		rigTent8_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_8_1", 	boneTent8_1, 	bCreateControls=False )
-		rigTent8_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_8_2",  	boneTent8_2, 	bCreateControls=False )
-		rigTent11_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_11_1", 	boneTent11_1, 	bCreateControls=False )
-		rigTent11_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_11_2",  	boneTent11_2, 	bCreateControls=False ) 
+		if ( isBullsquidJiggle == False ) : 
+			rigTent12_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_12_1", 	boneTent12_1, 	bCreateControls=False )
+			rigTent12_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_12_2",  	boneTent12_2, 	bCreateControls=False )
+			rigTent1_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_1_1", 	boneTent1_1, 	bCreateControls=False )
+			rigTent1_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_1_2",  	boneTent1_2, 	bCreateControls=False )
+			rigTent4_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_4_1", 	boneTent4_1, 	bCreateControls=False )
+			rigTent4_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_4_2",  	boneTent4_2, 	bCreateControls=False )
+			rigTent6_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_6_1", 	boneTent6_1, 	bCreateControls=False )
+			rigTent6_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_6_2",  	boneTent6_2, 	bCreateControls=False )
+			rigTent8_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_8_1", 	boneTent8_1, 	bCreateControls=False )
+			rigTent8_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_8_2",  	boneTent8_2, 	bCreateControls=False )
+			rigTent11_1    	= sfmUtils.CreateConstrainedHandle( "rig_tent_11_1", 	boneTent11_1, 	bCreateControls=False )
+			rigTent11_2    	= sfmUtils.CreateConstrainedHandle( "rig_tent_11_2",  	boneTent11_2, 	bCreateControls=False ) 
 		
 		rigTail1 		= sfmUtils.CreateConstrainedHandle( "rig_tail_1",		boneTail1,		bCreateControls=False )
 		rigTail2 		= sfmUtils.CreateConstrainedHandle( "rig_tail_2",		boneTail2,		bCreateControls=False )
@@ -415,10 +422,12 @@ def BuildRig():
 		allRigHandles = [ 	rigRoot, rigBase, 
 							rigHead, rigJaw,
 							rigHipR, rigKneeR, rigAnkleR, rigToeR, rigKneeHelperR,
-							rigHipL, rigKneeL, rigAnkleL, rigToeL, rigKneeHelperL,
-							rigTent12_1, rigTent12_2, rigTent1_1, rigTent1_2, rigTent4_1, rigTent4_2, 
+							rigHipL, rigKneeL, rigAnkleL, rigToeL, rigKneeHelperL ] ;
+							
+		if ( isBullsquidJiggle == False ) : 
+			allRigHandles += [rigTent12_1, rigTent12_2, rigTent1_1, rigTent1_2, rigTent4_1, rigTent4_2, 
 							rigTent6_1, rigTent6_2, rigTent8_1, rigTent8_2, rigTent11_1, rigTent11_2,
-							rigTail1, rigTail2, rigTail3, rigTail4, rigTail5 ] ;
+							rigTail1, rigTail2, rigTail3, rigTail4, rigTail5];
     
     if ( isHoundeye ):
 		rigRoot    		= sfmUtils.CreateConstrainedHandle( "rig_root",     	boneRoot,    	bCreateControls=False )
@@ -722,19 +731,20 @@ def BuildRig():
 		sfmUtils.ParentMaintainWorld( rigAnkleL,        rigRoot )
 		sfmUtils.ParentMaintainWorld( rigToeL,        	rigAnkleL )		
 		sfmUtils.ParentMaintainWorld( rigKneeHelperL,   rigKneeL )	
-		
-		sfmUtils.ParentMaintainWorld( rigTent12_1,   	rigJaw )	
-		sfmUtils.ParentMaintainWorld( rigTent12_2,   	rigTent12_1 )	
-		sfmUtils.ParentMaintainWorld( rigTent1_1,   	rigJaw )	
-		sfmUtils.ParentMaintainWorld( rigTent1_2,   	rigTent1_1 )	
-		sfmUtils.ParentMaintainWorld( rigTent4_1,   	rigJaw )	
-		sfmUtils.ParentMaintainWorld( rigTent4_2,   	rigTent4_1 )	
-		sfmUtils.ParentMaintainWorld( rigTent6_1,   	rigJaw )	
-		sfmUtils.ParentMaintainWorld( rigTent6_2,   	rigTent6_1 )	
-		sfmUtils.ParentMaintainWorld( rigTent8_1,   	rigJaw )	
-		sfmUtils.ParentMaintainWorld( rigTent8_2,   	rigTent8_1 )	
-		sfmUtils.ParentMaintainWorld( rigTent11_1,   	rigJaw )	
-		sfmUtils.ParentMaintainWorld( rigTent11_2,   	rigTent11_1 )	
+				
+		if ( isBullsquidJiggle == False ) : 
+			sfmUtils.ParentMaintainWorld( rigTent12_1,   	rigJaw )	
+			sfmUtils.ParentMaintainWorld( rigTent12_2,   	rigTent12_1 )	
+			sfmUtils.ParentMaintainWorld( rigTent1_1,   	rigJaw )	
+			sfmUtils.ParentMaintainWorld( rigTent1_2,   	rigTent1_1 )	
+			sfmUtils.ParentMaintainWorld( rigTent4_1,   	rigJaw )	
+			sfmUtils.ParentMaintainWorld( rigTent4_2,   	rigTent4_1 )	
+			sfmUtils.ParentMaintainWorld( rigTent6_1,   	rigJaw )	
+			sfmUtils.ParentMaintainWorld( rigTent6_2,   	rigTent6_1 )	
+			sfmUtils.ParentMaintainWorld( rigTent8_1,   	rigJaw )	
+			sfmUtils.ParentMaintainWorld( rigTent8_2,   	rigTent8_1 )	
+			sfmUtils.ParentMaintainWorld( rigTent11_1,   	rigJaw )	
+			sfmUtils.ParentMaintainWorld( rigTent11_2,   	rigTent11_1 )	
 		
 		sfmUtils.ParentMaintainWorld( rigTail1,        	rigBase )
 		sfmUtils.ParentMaintainWorld( rigTail2,        	rigTail1 )
@@ -969,18 +979,19 @@ def BuildRig():
 		sfmUtils.CreatePointOrientConstraint( rigToeR,		boneToeR )
 		sfmUtils.CreatePointOrientConstraint( rigToeL,    	boneToeL )
 		
-		sfmUtils.CreatePointOrientConstraint( rigTent12_1,	boneTent12_1 )
-		sfmUtils.CreatePointOrientConstraint( rigTent12_2,	boneTent12_2 )
-		sfmUtils.CreatePointOrientConstraint( rigTent1_1,	boneTent1_1 )
-		sfmUtils.CreatePointOrientConstraint( rigTent1_2,	boneTent1_2 )
-		sfmUtils.CreatePointOrientConstraint( rigTent4_1,	boneTent4_1 )
-		sfmUtils.CreatePointOrientConstraint( rigTent4_2,	boneTent4_2 )
-		sfmUtils.CreatePointOrientConstraint( rigTent6_1,	boneTent6_1 )
-		sfmUtils.CreatePointOrientConstraint( rigTent6_2,	boneTent6_2 )
-		sfmUtils.CreatePointOrientConstraint( rigTent8_1,	boneTent8_1 )
-		sfmUtils.CreatePointOrientConstraint( rigTent8_2,	boneTent8_2 )
-		sfmUtils.CreatePointOrientConstraint( rigTent11_1,	boneTent11_1 )
-		sfmUtils.CreatePointOrientConstraint( rigTent11_2,	boneTent11_2 )
+		if ( isBullsquidJiggle == False ) : 
+			sfmUtils.CreatePointOrientConstraint( rigTent12_1,	boneTent12_1 )
+			sfmUtils.CreatePointOrientConstraint( rigTent12_2,	boneTent12_2 )
+			sfmUtils.CreatePointOrientConstraint( rigTent1_1,	boneTent1_1 )
+			sfmUtils.CreatePointOrientConstraint( rigTent1_2,	boneTent1_2 )
+			sfmUtils.CreatePointOrientConstraint( rigTent4_1,	boneTent4_1 )
+			sfmUtils.CreatePointOrientConstraint( rigTent4_2,	boneTent4_2 )
+			sfmUtils.CreatePointOrientConstraint( rigTent6_1,	boneTent6_1 )
+			sfmUtils.CreatePointOrientConstraint( rigTent6_2,	boneTent6_2 )
+			sfmUtils.CreatePointOrientConstraint( rigTent8_1,	boneTent8_1 )
+			sfmUtils.CreatePointOrientConstraint( rigTent8_2,	boneTent8_2 )
+			sfmUtils.CreatePointOrientConstraint( rigTent11_1,	boneTent11_1 )
+			sfmUtils.CreatePointOrientConstraint( rigTent11_2,	boneTent11_2 )
 		
 		sfmUtils.CreatePointOrientConstraint( rigTail1,		boneTail1 )
 		sfmUtils.CreatePointOrientConstraint( rigTail2,		boneTail2 )
@@ -1148,12 +1159,14 @@ def BuildRig():
 		rigTentGroup = rootGroup.CreateControlGroup( "RigTentacles" )		
 		sfmUtils.AddDagControlsToGroup( rigHeadGroup, rigHead, rigJaw )  	  		
 		rigHeadGroup.AddChild( rigTentGroup )		
-		sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent12_1, rigTent12_2 )  
-		sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent1_1, rigTent1_2 )  
-		sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent4_1, rigTent4_2 )  
-		sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent6_1, rigTent6_2 )  
-		sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent8_1, rigTent8_2 )  
-		sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent11_1, rigTent11_2 )  
+				
+		if ( isBullsquidJiggle == False ) : 
+			sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent12_1, rigTent12_2 )  
+			sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent1_1, rigTent1_2 )  
+			sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent4_1, rigTent4_2 )  
+			sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent6_1, rigTent6_2 )  
+			sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent8_1, rigTent8_2 )  
+			sfmUtils.AddDagControlsToGroup( rigTentGroup, rigTent11_1, rigTent11_2 )  
 		
 		rigLegsGroup = rootGroup.CreateControlGroup( "RigLegs" )
 		RightLegGroup = rootGroup.CreateControlGroup( "Right Leg" )
@@ -1481,9 +1494,6 @@ def BuildRig():
 		control = sfmUtils.CreateControlAndChannel('AssassinCloak2', vs.AT_FLOAT, 0.0, animSet, shot)
 		control.channel.SetOutput(cloak_2, '$cloakfactor')	
 		cloakMasterConnection.AddOutput(cloak_2, '$cloakfactor')
-			
-    #if ( isLoader  ):		
-		#sfm.AimConstraint( "rigLegFL_Piston1", "rigLegFL_Piston2", wu=[ 0, -1, 0 ], wuSpace="refObject", refObject="rig_pelvis", mo=True )
 		
 	
     return
