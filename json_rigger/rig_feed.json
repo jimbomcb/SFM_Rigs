@@ -336,6 +336,42 @@
 		]
 		
     },
+    "asw_boomer": {
+        "models": [
+            "models/aliens/boomer/boomer.mdl"
+        ],
+		
+        "categories": {
+            "RigBody": { "colour": "topLevel" },
+            "RigLegs": { "colour": "topLevel" }
+        },
+		
+		"categories_order": [ "RigBody", "RigLegs" ],
+		
+        "rigs": [
+            {"name":"rigBase", 			"category": "RigBody", 		"bone": "root", 		"parent": "root"},
+			
+            {"name":"rigLeg1Upper", 	"category": "RigLegs", 		"bone": "leg_1_upper", 	"parent": "rigBase"},
+            {"name":"rigLeg1Mid", 		"category": "RigLegs", 		"bone": "leg_1_mid", 	"parent": "rigLeg1Upper"},
+            {"name":"rigLeg1Lower", 	"category": "RigLegs", 		"bone": "leg_1_lower", 	"parent": "rigLeg1Mid"},
+			
+            {"name":"rigLeg2Upper", 	"category": "RigLegs", 		"bone": "leg_2_upper", 	"parent": "rigBase"},
+            {"name":"rigLeg2Mid", 		"category": "RigLegs", 		"bone": "leg_2_mid", 	"parent": "rigLeg2Upper"},
+            {"name":"rigLeg2Lower", 	"category": "RigLegs", 		"bone": "leg_2_lower", 	"parent": "rigLeg2Mid"},
+			
+            {"name":"rigLeg3Upper", 	"category": "RigLegs", 		"bone": "leg_3_upper", 	"parent": "rigBase"},
+            {"name":"rigLeg3Mid", 		"category": "RigLegs", 		"bone": "leg_3_mid", 	"parent": "rigLeg2Upper"},
+            {"name":"rigLeg3Lower", 	"category": "RigLegs", 		"bone": "leg_3_lower", 	"parent": "rigLeg2Mid"}
+
+        ],
+		
+		"ikjoint": [
+			{ "start": "rigLeg1Upper", "middle": "rigLeg1Mid", "end": "rigLeg1Lower", "knee": "rigLeg1Mid", "knee_name": "rigLeg1Knee", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLeg2Upper", "middle": "rigLeg2Mid", "end": "rigLeg2Lower", "knee": "rigLeg2Mid", "knee_name": "rigLeg2Knee", "constrainfoot":true, "offset": [0,-16,0] },
+			{ "start": "rigLeg3Upper", "middle": "rigLeg3Mid", "end": "rigLeg3Lower", "knee": "rigLeg3Mid", "knee_name": "rigLeg3Knee", "constrainfoot":true, "offset": [0,-16,0] }
+		]
+		
+    },
 	"asw_mortar3": {
         "models": [
             "models/aliens/mortar3/mortar3.mdl"
