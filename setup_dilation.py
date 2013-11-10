@@ -1,4 +1,4 @@
-# Adds scaling control to selfillum
+# Adds dilation controllers for pupils.
 # - John McBroom
 
 import vs
