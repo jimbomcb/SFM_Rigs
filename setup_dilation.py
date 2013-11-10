@@ -19,7 +19,7 @@ def SetupDilation( animSet, shot, group, name, material ):
 	control = sfmUtils.CreateControlAndChannel('dilationControl', vs.AT_FLOAT, 0.0, animSet, shot)
 	control.channel.SetOutput(dilationElement, '$dilation')
 	dilationConnection.AddOutput(dilationElement, '$dilation')
-
+	
 def BuildRig():
 
 	shot = sfm.GetCurrentShot()
